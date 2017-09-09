@@ -154,27 +154,13 @@ function randIdea() {
 
 /**@type {{[k: string]: Command | string}} */
 let commands = {
-	/**
-	 * Help commands
-	 *
-	 * These commands are here to provide information about the bot.
-	 */
-
-	//Returns basic information about the bot
-	credits: 'about',
-	about: function (target, room, user) {
-		let text = (room === user || user.hasRank(room.id, '#')) ? '' : '/pm ' + user.id + ', ';
-		text += "**Writing Bot** by AxeBane & sirDonovan __(forked from Pokémon Showdown Bot by: Quinella, TalkTakesTime, and Morfent)__";
-		this.say(text);
-	},
-
 	/*
 	 * Random Commands Section!
 	 * Place all 'random thing generator' commands in this area!
 	 * This is a template for all Random Commands; please don't use this as an actual command.
 	 * randomcommands: function (target, room, user) {
 	 *	if (!user.canUse('randomcommands', room.id)) return false;
-	 *	let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+	 *	let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 	 *	let variableone = list1[Math.floor(list1.length * Math.random())];
 	 *	let variabletwo = list2[Math.floor(list2.length * Math.random())];
 	 *	this.say(text + "Randomly generated thing: __" + variableone + " " + variabletwo + "__.");
@@ -185,7 +171,7 @@ let commands = {
 	chargen: 'randomcharacter',
 	genchar: 'randomcharacter',
 	randomcharacter: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		let adjective = characterAdjectives[Math.floor(characterAdjectives.length * Math.random())];
 		let type = characterTypes[Math.floor(characterTypes.length * Math.random())];
 		let role = roles[Math.floor(roles.length * Math.random())];
@@ -207,7 +193,7 @@ let commands = {
 	gentype: 'randomtype',
 	randtype: 'randomtype',
 	randomtype: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		target = Tools.toId(target);
 		if (target && target !== 'single' && target !== 'dual') this.say(text + "Please input either 'single' or 'dual' as arguments, or leave it blank for a random decision. Continuing as if you left it blank.");
 		let firstType = types[Math.floor(types.length * Math.random())];
@@ -223,7 +209,7 @@ let commands = {
 	//Returns a random statistical build.
 	randstats: 'randomstats',
 	randomstats: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		let targetNumber = parseInt(target);
 		if (target && (isNaN(targetNumber) || targetNumber < 30 || targetNumber > 780)) return this.say(text + "Specified BST must be a whole number between 30 and 780.");
 		let bst = target ? Math.floor(targetNumber) : Math.floor(580 * Math.random()) + 200;
@@ -254,7 +240,7 @@ let commands = {
 	genRP: 'randRP',
 	randrp: 'randRP',
 	randRP: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		let targets = target.split(", ");
 		if (!target || targets.length < 2) return this.say(text + "Please specify two names, seperated by a comma.");
 		let X = targets[0];
@@ -375,7 +361,7 @@ let commands = {
 	randompoke: 'randpokemon',
 	randompokemon: 'randpokemon',
 	randpokemon: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		let randompokes = [];
 		/**@type {Array<string>} */
 		let parameters = [];
@@ -451,7 +437,7 @@ let commands = {
 				}
 			}
 		}
-		if (pokequantity === 1 && room !== user && user.hasRank(room.id, '+')) text = '!dt ';
+		if (pokequantity === 1 && !(room instanceof Users.User) && user.hasRank(room, '+')) text = '!dt ';
 
 		let attempt = -1;
 		let dexNumbers = [];
@@ -527,7 +513,7 @@ let commands = {
 	randomscene: 'randomlocation',
 	randlocation: 'randomlocation',
 	randomlocation: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		let adjective = adjectives[Math.floor(adjectives.length * Math.random())];
 		let location = locations[Math.floor(locations.length * Math.random())];
 		this.say(text + "Randomly generated scene: __" + adjective + " " + location + "__.");
@@ -535,7 +521,7 @@ let commands = {
 	//Returns a random Pokemon move.
 	randmove: 'randommove',
 	randommove: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		let types = {"normal":1, "fire":1, "water":1, "grass":1, "electric":1, "ice":1, "fighting":1, "poison":1, "ground":1, "flying":1, "psychic":1, "bug":1, "rock":1, "ghost":1, "dragon":1, "dark":1, "steel":1, "fairy":1};
 		let categories = {"physical": 1, "special": 1, "status": 1};
 		let moveQuantity = 1;
@@ -615,7 +601,7 @@ let commands = {
 	randomstyle: 'randomgenre',
 	randgenre: 'randomgenre',
 	randomgenre: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		let genre1 = genres[Math.floor(genres.length * Math.random())];
 		let genre2 = genres[Math.floor(genres.length * Math.random())];
 		while (genre1 === genre2) {
@@ -629,7 +615,7 @@ let commands = {
 	randomidea: 'randomstory',
 	randstory: 'randomstory',
 	randomstory: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		return this.say(text + "Randomly generated story | " + randIdea());
 	},
 	//End Random Commands
@@ -655,7 +641,7 @@ let commands = {
 				Storage.exportDatabase('writing');
 				return this.say("Recorded random prompt: " + thing);
 			} else if (Tools.toId(targets[0]) === "add") {
-				if (!user.hasRank(room.id, '+')) return false;
+				if (room instanceof Users.User || !user.hasRank(room, '+')) return false;
 				if (!targets[1]) return this.say("Please specify a prompt to add.");
 				database.potd.push({
 					prompt: targets.slice(1).join(', ').trim(),
@@ -667,7 +653,7 @@ let commands = {
 			} else if (Tools.toId(targets[0]) === "delete") {
 				if (!targets[1]) return this.say("Please state which prompt you want to delete (between 1 and " + database.potd.length + ")");
 				if (targets[1] === "0") return false;
-				if (!user.hasRank(room.id, '%') && user.id !== database.potd[parseInt(targets[1]) - 1].user) return false;
+				if ((room instanceof Users.User || !user.hasRank(room, '%')) && user.id !== database.potd[parseInt(targets[1]) - 1].user) return false;
 				database.potd.splice(parseInt(targets[1]) - 1, 1);
 				Storage.exportDatabase('writing');
 				return this.say("Deleting specified prompt... Prompts remaining in queue: " + database.potd.length);
@@ -683,13 +669,13 @@ let commands = {
 	//Returns the Word of the Day! One of Writing's most-used commands.
 	'word': 'wotd',
 	wotd: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		if (!target) {
 			if (!database.wotd) return this.say(text + "No Word of the Day has been set.");
 			let tem = new Date(database.wotd.time).toLocaleString('en-US', {hour: 'numeric', minute:'numeric', day:'2-digit', month:'long', hour12: true, timeZoneName: 'short'});
 			let box = '<div style="background:url(https://i.imgur.com/loMDPK2.jpg) center;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"> <span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:#6688AA;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-book" aria-hidden="true"></i> Word of the Day <i class="fa fa-pencil" aria-hidden="true"></i></span> <span style="font-size:30pt;display:block;">' + database.wotd.word + '</span> <span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:2px;">' + database.wotd.pron + ' / <strong style="letter-spacing:0;">' + database.wotd.kind + '</strong></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)">1.</strong>' + database.wotd.definition + '</span><div style="width:100%;padding:2px 0;border:1px solid #6688AA;display:block;font-family:sans-serif;font-size:9.5pt;color:#6688AA;text-align:center;margin-top:15px;border-radius:2px;"> <span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ' + database.wotd.user + ' on ' + tem + '</span> </div></div></div>';
 			let boxpm = '<div style="background:url(https://i.imgur.com/loMDPK2.jpg) center;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"> <span style="display:block;font-family:serif;font-size:14pt;font-style:oblique;background:#6688AA;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;">Word of the Day</span> <span style="font-size:20pt;display:block;">' + database.wotd.word + '</span> <span style="font-family:sans-serif;font-size:11pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:2px;">' + database.wotd.pron + ' / <strong style="letter-spacing:0;">' + database.wotd.kind + '</strong></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)">1.</strong>' + database.wotd.definition + '</span></div></div>';
-			if (user.hasRank(room.id, '+') && room !== user) {
+			if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
 				return this.sayHtml(box);
 			} else {
 				// The below is a hacky way to get pminfobox to work within PM. It defaults to Writing since AxeBot/The Scribe is always * in that room. For personal bots, this should be changed to any room that you can guarentee the bot has at least * permissions.
@@ -708,7 +694,7 @@ let commands = {
 		let typo = false;
 		if (targets[0] === "typo") {
 			if (!database.wotd) return this.say(text + "There is no Word of the Day to correct!");
-			if ((!user.hasRank(room.id, '%')) && user.name !== database.wotd.user) return this.say(text + "Sorry, you must be the original user or driver and above to make typo corrections.");
+			if ((room instanceof Users.User || !user.hasRank(room, '%')) && user.name !== database.wotd.user) return this.say(text + "Sorry, you must be the original user or driver and above to make typo corrections.");
 			typo = true;
 			targets.shift();
 		}
@@ -717,7 +703,7 @@ let commands = {
 		}
 		let hasPerms = false;
 		if (database.scribeShop) {
-			if (typo || user.hasRank(room.id, '+')) {
+			if (typo || (!(room instanceof Users.User) && user.hasRank(room, '+'))) {
 				hasPerms = true;
 			} else {
 				for (let i = 0; i < database.scribeShop.length; i++) {
@@ -730,7 +716,7 @@ let commands = {
 					}
 				}
 			}
-		} else if (user.hasRank(room.id, '+')) {
+		} else if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
 			hasPerms = true;
 		}
 		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the Word of the Day.');
@@ -758,12 +744,12 @@ let commands = {
 	},
 	//Returns the link to the Writing Room's website.
 	site: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		this.say(text + "Writing Room's Website: http://pswriting.weebly.com/");
 	},
 	//Returns the current time of day! ...For the bot, that is.
 	time: function (target, room, user) {
-		let text = (room === user || user.hasRank(room.id, '+')) ? '' : '/pm ' + user.name + ', ';
+		let text = (room instanceof Users.User || user.hasRank(room, '+')) ? '' : '/pm ' + user.name + ', ';
 		let now = new Date();
 		/**@param {number} time */
 		let correct = function (time) {
@@ -829,7 +815,7 @@ let commands = {
 	newbie: 'rules',
 	faq: 'rules',
 	rules: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		switch (room.id) {
 		case 'writing':
 			text += "If you're new to the Writing room, be sure to read our website: http://pswriting.weebly.com/";
@@ -845,19 +831,19 @@ let commands = {
 	},
 	//For when you need a little love.
 	esupport: function (target, room, user) {
-		let text = user.hasRank(room.id, '%') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '%') ? '' : '/pm ' + user.name + ', ';
 		this.say(text + 'I love you, ' + user.name + '.');
 	},
 	//Returns the link for the room's Google Drive.
 	drive: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		this.say(text + 'Community Drive: http://bit.do/ps-writing-archive');
 	},
 	//Quick link to a list of games and activities
 	fun: 'games',
 	activities: 'games',
 	games: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		this.say(text + 'Visit this page for a list of our various games and activities: http://pswriting.weebly.com/games--activities.html');
 	},
 	//Sunday scribing hype. :o
@@ -867,41 +853,41 @@ let commands = {
 	sundayslam: 'sundayscribing',
 	scribing: 'sundayscribing',
 	sundayscribing: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		this.say(text + "Every week we hold a Sunday Scribing challenge in which participants are to write a story or a poem (depending on the week) based on the topic announced on Sunday. They have until the following Friday to submit it. For more info and the submission link: http://goo.gl/Ezik4q");
 	},
 	//Returns a link to a Google Form where one can request for a new folder.
 	reqfolder: 'folderreq',
 	folderreq: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		this.say(text + 'Need a folder for our Google Drive Writing Archive? Submit a request here: http://bit.do/ps-folderreq');
 	},
 	//Returns a handy tool for capitalising things.
 	titlehelp: 'title',
 	title: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		this.say(text + 'Need help capitalising a title? Try out this helpful tool! http://titlecapitalization.com/');
 	},
 	//Returns a link to the Writing Room's poems list.
 	poems: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		this.say(text + 'Writing Room Poems: http://bit.do/PSwritingpoems');
 	},
 	//Returns a link to the Writing Room's stories list.
 	stories: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		this.say(text + 'Writing Room Stories: http://bit.do/PSwritingstories');
 	},
 	//Returns a brief guide to becoming voice.
 	voice: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		this.say(text + 'Interested in becoming a voice? Check out the guideines for your chance at having a shot! http://bit.do/pswritingvoicerules or http://bit.do/pswritingvoicerap');
 	},
 	//Starts timed announcements. 
 	//NOTE: Broken? Hard to tell.
 	/*
 	announce: function (target, room, user) {
-		if (!user.hasRank(room.id, '%')) return false;
+		if (!user.hasRank(room, '%')) return false;
 		target = Tools.toId(target);
 		if (target === 'off') {
 			if (this.buzzer) clearInterval(this.buzzer);
@@ -940,7 +926,7 @@ let commands = {
 	//Clears the mail of a specific user, or all of it.
 	clearmail: 'clearmessages',
 	clearmessages: function (target, room, user) {
-		if (!user.hasRank(room.id, '#')) return false;
+		if (room instanceof Users.User || !user.hasRank(room, '#')) return false;
 		if (!target) return this.say('Specify whose mail to clear or \'all\' to clear all mail.');
 		if (!database.mail) return this.say('The message file is empty.');
 		if (target === 'all') {
@@ -967,7 +953,7 @@ let commands = {
 	//Counts how much mail is currently pending and returns a link (in PMs) to the user about who sent what when and to whom if they're of a certain rank.
 	countmessages: 'countmail',
 	countmail: function (target, room, user) {
-		if (!user.hasRank(room.id, '+')) return false;
+		if (room instanceof Users.User || !user.hasRank(room, '+')) return false;
 		if (!database.mail) this.say('The message file is empty');
 		let messageCount = 0;
 		let oldestMessage = Date.now();
@@ -983,7 +969,7 @@ let commands = {
 		let day = Math.floor((Date.now() - oldestMessage) / (24 * 60 * 60 * 1000));
 		this.say('There are currently **' + messageCount + '** pending messages. ' + (messageCount ? 'The oldest message ' + (!day ? 'was left today.' : 'is __' + day + '__ days old.') : ''));
 
-		if (user.hasRank(room.id, '@')) {
+		if (user.hasRank(room, '@')) {
 			let output = [];
 			for (let i = 0; i < messageArray.length; i++) {
 				output.push(messageArray[i][0] + "\n" + messageArray[i][1] + "\n" + messageArray[i][2] + "\n");
@@ -996,7 +982,7 @@ let commands = {
 	upl: 'messageblacklist',
 	unpoeticlicense: 'messageblacklist',
 	messageblacklist: function (target, room, user) {
-		if (!user.hasRank(room.id, '@')) return false;
+		if (room instanceof Users.User || !user.hasRank(room, '@')) return false;
 		if (!target) return this.say('Please specify which user(s) to blacklist from the message system');
 		let users = target.split(', ');
 		let errors = [];
@@ -1017,7 +1003,7 @@ let commands = {
 	//Returns the list of users blacklisted from using the messaging system.
 	vmb: 'viewmessageblacklist',
 	viewmessageblacklist: function (target, room, user) {
-		if (!user.hasRank(room.id, '@')) return false;
+		if (room instanceof Users.User || !user.hasRank(room, '@')) return false;
 		if (!database.messageBlacklist) return this.say('No users are blacklisted from the message system');
 		let messageBlacklist = Object.keys(database.messageBlacklist);
 		Tools.uploadToHastebin('The following users are banned in ' + room + ':\n\n' + messageBlacklist.join('\n'), /**@param {string} link*/ link => this.say("/pm " + user.name + ", Message Blacklist: " + link));
@@ -1026,16 +1012,14 @@ let commands = {
 	bio: 'biography',
 	autobiography: 'biography',
 	biography: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		let tarUser = Tools.toId(target);
-		if (!database.bios) {
-			database.bios = [];
-			Storage.exportDatabase('writing');
-		}
+		if (!database.bios) database.bios = [];
 		let bios = database.bios;
 		let targets = target.split(' ');
 		if (Tools.toId(targets[0]) === "set" && targets[1]) {
-			if (!user.hasRank(room.id, '+')) return this.say(text + "Sorry, but you need to be at least a voice to set a biography.");
+			if (room instanceof Users.User) return this.say("You must use this command in the room.");
+			if (!user.hasRank(room, '+')) return this.say(text + "Sorry, but you need to be at least a voice to set a biography.");
 			tarUser = user.id;
 			let input = targets.slice(1).join(' ');
 			for (let i = 0, len = bios.length; i < len; i++) {
@@ -1069,12 +1053,12 @@ let commands = {
 	addquills: 'addfunds',
 	pay: 'addfunds',
 	addfunds: function (target, room, user) {
-		if (!user.hasRank(room.id, '%')) return false;
+		if (room instanceof Users.User || !user.hasRank(room, '%')) return false;
 		let targets = target.split(',');
 		if (targets.length !== 2) return this.say("Incorrect number of arguments. Usage: user, funds to add");
 		let targetUser = Tools.toId(targets[0]);
 		//Whilst it certainly shouldn't be an issue in the rooms I'm personally stationed in, we may as well prevent moderators from abusing their rights and giving themselves infinite money. No need to enforce this on ROs.
-		if (targetUser === user.id && !user.hasRank(room.id, '#')) return this.say("Sorry, but you're not allowed to add funds to your own account unless it's for debugging purposes. ^.^'");
+		if (targetUser === user.id && !user.hasRank(room, '#')) return this.say("Sorry, but you're not allowed to add funds to your own account unless it's for debugging purposes. ^.^'");
 		let funds = parseInt(targets[1]);
 		if (isNaN(funds)) return this.say("Currency amount to add is not equal to a number.");
 
@@ -1119,7 +1103,7 @@ let commands = {
 	takequills: 'takefunds',
 	take: 'takefunds',
 	takefunds: function (target, room, user) {
-		if (!user.hasRank(room.id, '@')) return false;
+		if (room instanceof Users.User || !user.hasRank(room, '@')) return false;
 		let targets = target.split(',');
 		if (targets.length !== 2) return this.say("Incorrect number of arguments. Usage: user, funds to add");
 		let targetUser = Tools.toId(targets[0]);
@@ -1138,7 +1122,7 @@ let commands = {
 	atm: 'bal',
 	balance: 'bal',
 	bal: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		if (!database.scribeShop) return this.say(text + "The Scribe Shop does not exist! Perhaps Quills should be given out first before trying to view a non-existent currency, hmm?");
 
 		//If no user is specified, check the user's own balance.
@@ -1171,7 +1155,7 @@ let commands = {
 	ss: 'shop',
 	scribeshop: 'shop',
 	shop: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		let line = "__________________________________________________________________________________________________________________________________________";
 		let post = [line,
 			"\nScribe Shop!\n",
@@ -1207,7 +1191,7 @@ let commands = {
 	},
 	// Buy stuff. .-.
 	buy: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		if (!database.scribeShop) return this.say(text + "The Scribe Shop does not exist! Perhaps funds should be given out first before trying to view a non-existent currency, hmm?");
 		let targets = target.split(',');
 		let item = Tools.toId(targets[0]);
@@ -1348,7 +1332,7 @@ let commands = {
 		}
 		case "poeticlicense":
 		case "license":
-			if (user.hasRank(room.id, '+')) return this.say(text + "There's no need for you to buy this! You can set the WOTD whenever you want, silly. ;p");
+			if (!(room instanceof Users.User) && user.hasRank(room, '+')) return this.say(text + "There's no need for you to buy this! You can set the WOTD whenever you want, silly. ;p");
 			if (amount > 1) return this.say(text + "Sorry, but you can only buy one of these. :c");
 			if (account.wotd) return this.say(text + "You already own a Poetic License! Remember to set the WOTD with " + Config.commandCharacter + "wotd ``word``, ``pronunciation``, ``part of speech`` (Noun, Verb, Adjective, Etc.), and ``Definition``.");
 			for (let j = 0; j < shopMerch.length; j++) {
@@ -1446,7 +1430,7 @@ let commands = {
 		case "mysoul":
 		case "yoursoul":
 		case "soul":
-			if (user.hasRank(room.id, '+')) {
+			if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
 				return this.say(text + "You cannot.");
 			} else {
 				return this.say(text + "...You really are a funny sort, aren't you?");
@@ -1459,7 +1443,7 @@ let commands = {
 	},
 	cookies: 'cookie',
 	cookie: function (target, room, user) {
-		let text = user.hasRank(room.id, '+') || room === user ? '' : '/pm ' + user.name + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		if (!database.scribeShop) return this.say(text + "The Scribe Shop does not exist! Perhaps funds should be given out first before trying to view a non-existent currency, hmm?");
 		for (let i = 0; i < database.scribeShop.length; i++) {
 			if (database.scribeShop[i].account === user.id) {
@@ -1475,7 +1459,7 @@ let commands = {
 	inspire: 'checkmasses',
 	masses: 'checkmasses',
 	checkmasses: function (target, room, user) {
-		if (!user.hasRank(room.id, '#')) return false;
+		if (room instanceof Users.User || !user.hasRank(room, '#')) return false;
 		if (!database.scribeShop) return this.say("Error: The Scribe Shop does not exist. Please instruct someone with a rank to add funds to somebody's account before continuing.");
 		let targets = target.split(',');
 		let buyer = Tools.toId(targets[0]);
@@ -1498,7 +1482,7 @@ let commands = {
 		}
 	},
 	editgreeting: function (target, room, user) {
-		if (room !== user && !user.hasRank(room.id, '+')) return false;
+		if (!(room instanceof Users.User) && !user.hasRank(room, '+')) return false;
 		if (!database.scribeShop) return this.say("Error: The Scribe Shop does not exist. Please instruct someone with a rank to add funds to somebody's account before continuing.");
 		if (!target) return this.say("Incorrect usage. ``(" + Config.commandCharacter + "editgreeting [public/private], New Greeting)``");
 		let targets = target.split(',');
@@ -1529,8 +1513,8 @@ let commands = {
 		}
 	},
 	spotlight: function (target, room, user) {
-		if (room !== user) return false;
-		let text = user.hasRank(room.id, '+') ? '' : '/pm ' + user.name + ', ';
+		if (room instanceof Users.User) return false;
+		let text = user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		if (Tools.toId(Config.username) === "axebot") return this.say(text + "This command cannot be used on AxeBot because it's too spammy.");
 		// Two minutes.
 		let found = false;
@@ -1544,7 +1528,7 @@ let commands = {
 				this.enable = setTimeout(() => {
 					let origVoice = false;
 					this.say(room, "/modchat +");
-					if (!user.hasRank(room.id, '+')) {
+					if (!user.hasRank(room, '+')) {
 						this.say(room, "/roomvoice " + user.id);
 					} else {
 						origVoice = true;
@@ -1569,7 +1553,7 @@ let commands = {
 	},
 	sponsor: function (target, room, user) {
 		if (!target) return false;
-		let text = (room === user || user.hasRank(room.id, '+')) ? '' : '/pm ' + user.id + ', ';
+		let text = (room instanceof Users.User || user.hasRank(room, '+')) ? '' : '/pm ' + user.id + ', ';
 		if (!database.sponsors) return this.say(text + "Sorry, but we don't have a list of sponsors to cross-reference with. Please submit a request with a staff member to be added.");
 		if (!database.scribeShop) return this.say(text + "Sorry, but an instance of the Scribe Shop doesn't exist! This means we can't cross-reference with the people that need to be sponsored. :c");
 		let targets = target.split(',');
@@ -1643,7 +1627,7 @@ let commands = {
 		return this.say(text + "Sorry, but you don't seem to be on our list of sponsors. :/ Please submit a request with a staff member to be added!");
 	},
 	sponsors: function (target, room, user) {
-		let text = (room === user || user.hasRank(room.id, '+')) ? '' : '/pm ' + user.id + ', ';
+		let text = (room instanceof Users.User || user.hasRank(room, '+')) ? '' : '/pm ' + user.id + ', ';
 		if (!database.sponsors) return this.say(text + "Sorry, but our list of sponsors is empty. </3");
 		let output = [];
 		let line = "_____________________________________________________________________________";
@@ -1661,7 +1645,7 @@ let commands = {
 		});
 	},
 	addsponsor: function (target, room, user) {
-		if (!user.hasRank(room.id, '#')) return false;
+		if (room instanceof Users.User || !user.hasRank(room, '#')) return false;
 		if (!target) return this.say("Don't forget to list the user that you want to add!");
 		if (!database.sponsors) database.sponsors = [];
 		let reference = Tools.toId(target);
@@ -1683,7 +1667,7 @@ let commands = {
 	rmmsponsor: 'deletesponsor',
 	removesponsor: 'deletesponsor',
 	deletesponsor: function (target, room, user) {
-		if (!user.hasRank(room.id, '#')) return false;
+		if (room instanceof Users.User || !user.hasRank(room, '#')) return false;
 		if (!target) return this.say("Please specify the user that you want to remove.");
 		if (!database.sponsors) return this.say("There aren't any sponsors to remove. :/");
 		let reference = Tools.toId(target);
@@ -1700,7 +1684,7 @@ let commands = {
 	enable: 'disablegreeting',
 	enablegreeting: 'disablegreeting',
 	disablegreeting: function (target, room, user) {
-		let text = (room === user || user.hasRank(room.id, '+')) ? '' : '/pm ' + user.id + ', ';
+		let text = (room instanceof Users.User || user.hasRank(room, '+')) ? '' : '/pm ' + user.id + ', ';
 		let error = "Please specify whether you'd like to alter a Public or Private greeting.";
 		if (!target) return this.say(text + error);
 		let type = Tools.toId(target);
@@ -1732,7 +1716,7 @@ let commands = {
 		}
 	},
 	'submit': function (target, room, user) {
-		let text = user.hasRank(room.id, '+') ? '' : '/pm ' + user.id + ', ';
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.id + ', ';
 		if (!target) return this.say(text + "Incorrect Usage. Use: ``" + Config.commandCharacter + "submit [username of recipient], [document name],[protagonist/antagonist]``");
 		let targets = target.split(',');
 		if (!targets[1]) return this.say(text + "You seem to have forgotten to put in the document that you wish to submit!");
@@ -1818,7 +1802,7 @@ let commands = {
 	* End of Scribe Shop Commands
 	*/
 	groups: function (target, room, user) {
-		if (!user.hasRank(room.id, '+')) return false;
+		if (room instanceof Users.User || !user.hasRank(room, '+')) return false;
 		if (!database.groups) {
 			database.groups = {};
 			database.groups.teams = [];
@@ -1923,7 +1907,7 @@ let commands = {
 		if (!target) return this.say("Error: Not enough arguments. Please use ``;myth help`` for usage instructions.");
 		let targets = target.split(', ');
 		if (targets[0] === "add") {
-			if (!user.hasRank(room.id, '+')) return false;
+			if (room instanceof Users.User || !user.hasRank(room, '+')) return false;
 			if (targets.length - 1 < 3) return this.say("Error: Not enough arguments. Please use ``;myth help`` for usage instructions.");
 			let name = Tools.toId(targets[1]);
 			let pan = Tools.toId(targets[2]);
@@ -1946,7 +1930,7 @@ let commands = {
 			Storage.exportDatabase('writing');
 			return this.say("To confirm addition of ``" + input.name + "`` under pantheon ``" + input.pan + "``, type ``;myth confirm, add``.");
 		} else if (targets[0] === "confirm") {
-			if (!user.hasRank(room.id, '%')) return false;
+			if (room instanceof Users.User || !user.hasRank(room, '%')) return false;
 			if (!targets[1]) return this.say("Please specify afterwards whether or not you want to ``add`` or ``delete`` something.");
 			if (targets[1] === "add" && database.myths.pending !== null) {
 				database.myths.pending.id = database.myths.lastID + 1;
@@ -1968,7 +1952,7 @@ let commands = {
 				this.say("There's nothing there to confirm. :v");
 			}
 		} else if (targets[0] === "addimage") {
-			if (!user.hasRank(room.id, '+')) return false;
+			if (room instanceof Users.User || !user.hasRank(room, '+')) return false;
 			if (targets.length > 3) return this.say("Please only specify a myth index number and an image.");
 			if (targets.length < 3) return this.say("Please specify both a myth index number and an image.");
 			if (isNaN(Number(targets[1]))) return this.say("That was not an index number. Please use the number that's stated in the entry for the thing you're trying to edit.");
@@ -1985,7 +1969,7 @@ let commands = {
 			}
 			return this.say("Entry not found. Are you sure you're using the right myth index number?");
 		} else if (targets[0] === "remove" || targets[0] === "delete") {
-			if (!user.hasRank(room.id, '%')) return false;
+			if (room instanceof Users.User || !user.hasRank(room, '%')) return false;
 			if (isNaN(Number(targets[1]))) return this.say("That was not an index number. Please use the number that's stated in the entry for the thing you're trying to edit.");
 			for (let i = 0; i < database.myths.db.length; i++) {
 				if (database.myths.db[i].id === targets[1]) {
