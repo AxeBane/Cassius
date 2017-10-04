@@ -12,7 +12,6 @@ const MESSAGES_TIME_OUT = 7 * 24 * 60 * 60 * 1000;
 
 // sync database properties
 if (!database.potd) database.potd = [];
-if (!database.potdCurrent) database.potdCurrent = {};
 if (!database.scribeShop) database.scribeShop = [];
 if (!database.myths) database.myths = {};
 if (!database.myths.db) {
@@ -625,12 +624,18 @@ let commands = {
 	'prompt': 'potd',
 	potd: function (target, room, user) {
 		if (!target) {
-			if (!database.potd[0]) return this.say("ERROR: Out of Prompt of the Days! q-q");
+			if (!(room instanceof Users.User) && !user.hasRank(room, '+')) return false;
+			if (!database.potdCurrent) {
+				if (!database.potd.length) return this.say("ERROR: Out of Prompt of the Days! q-q");
+				database.potdCurrent = database.potd.shift();
+				database.potdCurrent.time = Date.now();
+			}
 			this.say("The current Prompt of the Day is:");
-			return this.say(database.potdCurrent.prompt + " (set by " + database.potdCurrent.user + ")");
+			this.say(database.potdCurrent.prompt + " (set by " + database.potdCurrent.user + ")");
 		} else {
 			let targets = target.split(', ');
-			if ((Tools.toId(targets[0]) === "makerandom") || (Tools.toId(targets[0]) === "autogen")) {
+			let cmd = Tools.toId(targets[0]);
+			if (cmd === "makerandom" || cmd === "autogen") {
 				// This should be a last resort.
 				let thing = randIdea();
 				database.potd.push({
@@ -640,7 +645,7 @@ let commands = {
 				database.potdRanOut = false;
 				Storage.exportDatabase('writing');
 				return this.say("Recorded random prompt: " + thing);
-			} else if (Tools.toId(targets[0]) === "add") {
+			} else if (cmd === "add") {
 				if (room instanceof Users.User || !user.hasRank(room, '+')) return false;
 				if (!targets[1]) return this.say("Please specify a prompt to add.");
 				database.potd.push({
@@ -650,14 +655,22 @@ let commands = {
 				database.potdRanOut = false;
 				Storage.exportDatabase('writing');
 				return this.say("Recorded prompt. Your prompt is number " + database.potd.length + " in the queue!");
-			} else if (Tools.toId(targets[0]) === "delete") {
+			} else if (cmd === "delete") {
+				if (!(room instanceof Users.User) && !user.hasRank(room, '+')) return false;
 				if (!targets[1]) return this.say("Please state which prompt you want to delete (between 1 and " + database.potd.length + ")");
-				if (targets[1] === "0") return false;
-				if ((room instanceof Users.User || !user.hasRank(room, '%')) && user.id !== database.potd[parseInt(targets[1]) - 1].user) return false;
-				database.potd.splice(parseInt(targets[1]) - 1, 1);
+				let prompt = parseInt(targets[1]);
+				if (isNaN(prompt)) return;
+				if (!prompt || database.potd.length < prompt) return;
+				if ((room instanceof Users.User || !user.hasRank(room, '%')) && user.id !== database.potd[prompt - 1].user) return false;
+				database.potd.splice(prompt - 1, 1);
 				Storage.exportDatabase('writing');
 				return this.say("Deleting specified prompt... Prompts remaining in queue: " + database.potd.length);
-			} else if (Tools.toId(targets[0]) === "list") {
+			} else if (cmd === "next") {
+				if (database.potdCurrent && Date.now() - database.potdCurrent.time < (17 * 60 * 60 * 1000)) return this.say("You must wait at least 17 hours before updating the prompt of the day.");
+				database.potdCurrent = null;
+				this.run('prompt');
+			} else if (cmd === "list") {
+				if (!(room instanceof Users.User) && !user.hasRank(room, '+')) return false;
 				let output = [];
 				for (let i = 0; i < database.potd.length; i++) {
 					output.push("Prompt Number - " + (i + 1) + "\nPrompt: " + database.potd[i].prompt + "\nSubmitter: " + database.potd[i].user + "\n");
