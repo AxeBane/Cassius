@@ -50,7 +50,7 @@ let roles = ["Protagonist", "Antagonist", "Major character", "Minor character"];
 let pronouns = {'male': 'he', 'female': 'she', 'hermaphrodite': 'shi', 'neuter': 'they'};
 let possessivePronouns = {'male': 'His', 'female': 'Her', 'hermaphrodite': 'Hir', 'neuter': 'Their'};
 let types = ["Normal", "Fire", "Water", "Electric", "Grass", "Ice", "Fighting", "Poison", "Flying", "Ground", "Psychic", "Bug", "Rock", "Ghost", "Dragon", "Dark", "Steel", "Fairy", "Bird"];
-/* Shop Merchandise 
+/* Shop Merchandise
  * 1st Element: Name
  * 2nd Element: Description
  * 3rd Element: Price
@@ -896,7 +896,7 @@ let commands = {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		this.say(text + 'Interested in becoming a voice? Check out the guideines for your chance at having a shot! http://bit.do/pswritingvoicerules or http://bit.do/pswritingvoicerap');
 	},
-	//Starts timed announcements. 
+	//Starts timed announcements.
 	//NOTE: Broken? Hard to tell.
 	/*
 	announce: function (target, room, user) {
