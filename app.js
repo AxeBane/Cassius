@@ -21,6 +21,7 @@ try {
 	fs.writeFileSync('./config.js', fs.readFileSync('./config-example.js'));
 }
 
+// @ts-ignore
 global.Config = require('./config.js');
 if (!Config.username) throw new Error("Please specify a username in config.js");
 
@@ -34,9 +35,9 @@ global.MessageParser = require('./message-parser.js').MessageParser;
 
 global.Client = require('./client.js');
 
-global.Tournaments = require('./tournaments').Tournaments;
+global.Tournaments = require('./tournaments');
 
-global.Games = require('./games.js').Games;
+global.Games = require('./games.js');
 Games.loadGames();
 
 global.Storage = require('./storage.js');
