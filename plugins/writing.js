@@ -772,7 +772,7 @@ let commands = {
 				if (!(room instanceof Users.User) && Users.self.rooms.get(room) === '*') {
 					return this.pmHtml(user, boxpm);
 				} else {
-					return this.say(text + "Today's Myth of the Day is **" + database.motd.myth + "**: " + database.motd.image + " " + database.motd.desc);
+					return this.say(text + "Today's Myth of the Day is **" + database.motd.myth + "**: " + database.motd.desc + ' | ' + database.motd.image);
 				}
 			}
 		}
