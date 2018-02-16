@@ -833,7 +833,7 @@ let commands = {
 		case 'writing':
 			text += "If you're new to the Writing room, be sure to read our website: http://pswriting.weebly.com/";
 			break;
-		case 'mythology':
+		case 'canalavelibrary':
 			text += "Welcome to Myths & Magic! In this room, we, well... talk about mythology and magic! Though, discussion of black magic is not encouraged.";
 			break;
 		default:
