@@ -755,16 +755,16 @@ let commands = {
 		Storage.exportDatabase('writing');
 		this.say(text + "The Word of the Day has been set to '" + targets[0] + "'!");
 	},
-	// Returns the myth of the day for mythology room
-	'mythoftheday': 'motd',
-	motd: function (target, room, user) {
+		// Returns the myth of the day for mythology room
+	'mythoftheweek': 'motd',
+	motw: function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		if (!target) {
-			if (!database.motd) return this.say(text + "No Myth of the Day has been set.");
-			let tem = new Date(database.motd.time).toLocaleString('en-US', {hour: 'numeric', minute:'numeric', day:'2-digit', month:'long', hour12: true, timeZoneName: 'short'});
-			let box = `<div style="background-image: url(${database.motd.image}); background-size: contain; background-position: center; background-color: black; height: 400px; background-repeat: no-repeat"></div>`;
-			let boxpm = `<div style="background:purple;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"><span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:#6688AA;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-fire" aria-hidden="true"></i> Myth of the Day <i class="fa fa-fire" aria-hidden="true"></i></span> <center>${box}<br><span style="font-size:30pt;display:block;">${database.motd.myth} </span><p style="font-size:19px">Info: ${database.motd.desc}</p></center><span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:2px;"></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong></span><div style="width:100%;padding:2px 0;border:1px solid #6688AA;display:block;font-family:sans-serif;font-size:9.5pt;text-align:center;margin-top:15px;border-radius:2px;"><span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ${database.motd.user} ${tem}</span> </div></div></div>`;
-			let realBox = `<div style="background:purple;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"><span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:#6688AA;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-fire" aria-hidden="true"></i> Myth of the Day <i class="fa fa-fire" aria-hidden="true"></i></span> <center>${box}<br><span style="font-size:30pt;display:block;">${database.motd.myth} </span><p style="font-size:19px">Info: ${database.motd.desc}</p></center><span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:2px;"></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong></span><div style="width:100%;padding:2px 0;border:1px solid #6688AA;display:block;font-family:sans-serif;font-size:9.5pt;text-align:center;margin-top:15px;border-radius:2px;"><span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ${database.motd.user} ${tem}</span> </div></div></div>`;
+			if (!database.motw) return this.say(text + "No Myth of the Week has been set.");
+			let tem = new Date(database.motw.time).toLocaleString('en-US', {hour: 'numeric', minute:'numeric', day:'2-digit', month:'long', hour12: true, timeZoneName: 'short'});
+			let box = `<div style="background-image: url(${database.motw.image}); background-size: contain; background-position: center; background-color: black; height: 400px; background-repeat: no-repeat"></div>`;
+			let boxpm = `<div style="background:purple;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"><span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:#6688AA;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-fire" aria-hidden="true"></i> Myth of the Week <i class="fa fa-fire" aria-hidden="true"></i></span> <center>${box}<br><span style="font-size:30pt;display:block;">${database.motw.myth} </span><p style="font-size:19px">Info: ${database.motw.desc}</p></center><span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:2px;"></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong></span><div style="width:100%;padding:2px 0;border:1px solid #6688AA;display:block;font-family:sans-serif;font-size:9.5pt;text-align:center;margin-top:15px;border-radius:2px;"><span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ${database.motw.user} ${tem}</span> </div></div></div>`;
+			let realBox = `<div style="background:purple;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"><span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:#6688AA;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-fire" aria-hidden="true"></i> Myth of the Week <i class="fa fa-fire" aria-hidden="true"></i></span> <center>${box}<br><span style="font-size:30pt;display:block;">${database.motw.myth} </span><p style="font-size:19px">Info: ${database.motw.desc}</p></center><span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:2px;"></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong></span><div style="width:100%;padding:2px 0;border:1px solid #6688AA;display:block;font-family:sans-serif;font-size:9.5pt;text-align:center;margin-top:15px;border-radius:2px;"><span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ${database.motw.user} ${tem}</span> </div></div></div>`;
 			if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
 				return this.sayHtml(realBox);
 			} else {
@@ -772,24 +772,24 @@ let commands = {
 				if (!(room instanceof Users.User) && Users.self.rooms.get(room) === '*') {
 					return this.pmHtml(user, boxpm);
 				} else {
-					return this.say(text + "Today's Myth of the Day is **" + database.motd.myth + "**: " + database.motd.desc + ' | ' + database.motd.image);
+					return this.say(text + "Today's Myth of the Week is **" + Tools.toId(database.motw.myth) + "**: " + database.motw.desc + ' | ' + database.motw.image);
 				}
 			}
 		}
 		if (Tools.toId(target) === 'check' || Tools.toId(target) === 'time') {
-			if (!database.motd) return this.say(text + "There is no Myth of the Day to check!");
-			return this.say(text + "The Myth of the Day was last updated to **" + database.motd.myth + "** " + Tools.toDurationString(Date.now() - database.motd.time) + " ago by " + database.motd.user);
+			if (!database.motw) return this.say(text + "There is no Myth of the Week to check!");
+			return this.say(text + "The Myth of the Week was last updated to **" + database.motw.myth + "** " + Tools.toDurationString(Date.now() - database.motw.time) + " ago by " + database.motw.user);
 		}
 		let targets = target.split(',');
 		let typo = false;
 		if (targets[0] === "typo") {
-			if (!database.motd) return this.say(text + "There is no Myth of the Day to correct!");
-			if ((room instanceof Users.User || !user.hasRank(room, '%')) && user.name !== database.motd.user) return this.say(text + "Sorry, you must be the original user or driver and above to make typo corrections.");
+			if (!database.motw) return this.say(text + "There is no Myth of the Week to correct!");
+			if ((room instanceof Users.User || !user.hasRank(room, '%')) && user.name !== database.motw.user) return this.say(text + "Sorry, you must be the original user or driver and above to make typo corrections.");
 			typo = true;
 			targets.shift();
 		}
-		if (database.motd) {
-			if (!typo && Date.now() - database.motd.time < 61200000) return this.say(text + "Sorry, but at least 17 hours must have passed since the MOTD was last set in order to set it again!");
+		if (database.motw) {
+			if (!typo && Date.now() - database.motw.time < 432000000) return this.say(text + "Sorry, but at least 5 days must have passed since the MOTW was last set in order to set it again!");
 		}
 		let hasPerms = false;
 		if (database.scribeShop) {
@@ -798,10 +798,10 @@ let commands = {
 			} else {
 				for (let i = 0; i < database.scribeShop.length; i++) {
 					if (database.scribeShop[i].account === user.id) {
-						if (database.scribeShop[i].motd !== 0) {
-							database.scribeShop[i].motd -= 1;
+						if (database.scribeShop[i].motw !== 0) {
+							database.scribeShop[i].motw -= 1;
 							hasPerms = true;
-							this.say("Redeeming your Poetic License... Uses remaining: " + database.scribeShop[i].motd + "!");
+							this.say("Redeeming your Poetic License... Uses remaining: " + database.scribeShop[i].motw + "!");
 						}
 					}
 				}
@@ -809,27 +809,27 @@ let commands = {
 		} else if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
 			hasPerms = true;
 		}
-		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the Myth of the Day.');
+		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the Myth of the Week.');
 		if (targets.length < 3) return this.say(text + "Invalid arguments specified. The format is: __myth__, __description__, __image link__.");
-		let motd = {
+		let motw = {
 			myth: targets[0],
 			desc: targets[1],
 			image: targets[2],
 		};
 		if (!typo) {
-			motd.time = Date.now();
-			motd.user = user.name;
+			motw.time = Date.now();
+			motw.user = user.name;
 		} else {
-			motd.time = database.motd.time;
-			motd.user = database.motd.user;
+			motw.time = database.motw.time;
+			motw.user = database.motw.user;
 		}
-		if (!database.motdHistory) {
-			database.motdHistory = [];
+		if (!database.motwHistory) {
+			database.motwHistory = [];
 		}
-		database.motd = motd;
-		database.motdHistory.push(motd);
+		database.motw = motw;
+		database.motwHistory.push(motw);
 		Storage.exportDatabase('writing');
-		this.say(text + "The Myth of the Day has been set to '" + targets[0] + "'!");
+		this.say(text + "The Myth of the Week has been set to '" + targets[0] + "'!");
 	},
 	//Returns the link to the Writing Room's website.
 	site: function (target, room, user) {
