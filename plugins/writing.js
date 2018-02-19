@@ -755,10 +755,11 @@ let commands = {
 		Storage.exportDatabase('writing');
 		this.say(text + "The Word of the Day has been set to '" + targets[0] + "'!");
 	},
-		// Returns the myth of the day for mythology room
+	// Returns the myth of the day for mythology room
 	'mythoftheweek': 'motd',
 	motw: function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
+		if (room.id !='canalavelibrary') return this.pm('Please use this command in Canalave Library only.');
 		if (!target) {
 			if (!database.motw) return this.say(text + "No Myth of the Week has been set.");
 			let tem = new Date(database.motw.time).toLocaleString('en-US', {hour: 'numeric', minute:'numeric', day:'2-digit', month:'long', hour12: true, timeZoneName: 'short'});
