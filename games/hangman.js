@@ -18,25 +18,25 @@ const data = {
 };
 
 for (let i in Tools.data.pokedex) {
-	let pokemon = Tools.getPokemon(i);
+	let pokemon = Tools.getExistingPokemon(i);
 	if (!pokemon.species) continue;
 	data["Pokemon"].push(pokemon.species);
 }
 
 for (let i in Tools.data.moves) {
-	let move = Tools.getMove(i);
+	let move = Tools.getExistingMove(i);
 	if (!move.name) continue;
 	data["Pokemon Moves"].push(move.name);
 }
 
 for (let i in Tools.data.items) {
-	let item = Tools.getItem(i);
+	let item = Tools.getExistingItem(i);
 	if (!item.name) continue;
 	data["Pokemon Items"].push(item.name);
 }
 
 for (let i in Tools.data.abilities) {
-	let ability = Tools.getAbility(i);
+	let ability = Tools.getExistingAbility(i);
 	if (!ability.name) continue;
 	data["Pokemon Abilities"].push(ability.name);
 }
@@ -52,12 +52,15 @@ class Hangman extends Games.Game {
 		this.answers = [];
 		/**@type {?NodeJS.Timer} */
 		this.timeout = null;
-		this.hint = '';
+		/**@type {Array<string>} */
+		this.hint = [];
 		this.points = new Map();
 		this.maxPoints = 3;
 		this.categories = Object.keys(data);
 		this.currentCategory = '';
 		this.guessLimit = 10;
+		/**@type {Array<string>} */
+		this.letters = [];
 		/**@type {Array<string>} */
 		this.guessedLetters = [];
 		/**@type {Array<string>} */
@@ -75,10 +78,10 @@ class Hangman extends Games.Game {
 		if (this.variation) {
 			category = this.variation;
 		} else {
-			category = Tools.sample(this.categories);
+			category = Tools.sampleOne(this.categories);
 		}
 		this.currentCategory = category;
-		let word = Tools.sample(data[category]);
+		let word = Tools.sampleOne(data[category]);
 		this.answers = [word];
 		this.solvedLetters = [];
 		this.guessedLetters = [];

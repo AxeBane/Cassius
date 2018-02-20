@@ -9,8 +9,6 @@
 
 'use strict';
 
-const whitespaceRegex = new RegExp('\\s+', 'g');
-const nullCharactersRegex = new RegExp('[\u0000\u200B-\u200F]+', 'g');
 const capsRegex = new RegExp('[A-Z]', 'g');
 const stretchRegex = new RegExp('(.+)\\1+', 'g');
 
@@ -26,13 +24,15 @@ class Context {
 	 * @param {Room | User} room
 	 * @param {User} user
 	 * @param {string} command
+	 * @param {string} originalCommand
 	 * @param {number} [time]
 	 */
-	constructor(target, room, user, command, time) {
+	constructor(target, room, user, command, originalCommand, time) {
 		this.target = target ? target.trim() : '';
 		this.room = room;
 		this.user = user;
 		this.command = command;
+		this.originalCommand = originalCommand;
 		this.time = time || Date.now();
 	}
 
@@ -78,33 +78,35 @@ class Context {
 	}
 
 	/**
-	 * @param {string} [command]
-	 * @param {string} [target]
+	 * @param {string} [newCommand]
+	 * @param {string} [newTarget]
 	 * @returns {boolean}
 	 */
-	run(command, target) {
-		if (command) {
-			command = Tools.toId(command);
-			if (!Commands[command]) return false;
-			if (typeof Commands[command] === 'string') {
+	run(newCommand, newTarget) {
+		let command = this.command;
+		let target = this.target;
+		let originalCommand = this.originalCommand;
+		if (newCommand) {
+			newCommand = Tools.toId(newCommand);
+			if (!Commands[newCommand]) return false;
+			originalCommand = newCommand;
+			if (typeof Commands[newCommand] === 'string') {
 				// @ts-ignore Typescript bug - issue #10530
-				command = Commands[command];
+				newCommand = Commands[newCommand];
 			}
-			if (target) {
-				target = target.trim();
+			command = newCommand;
+			if (newTarget) {
+				target = newTarget.trim();
 			} else {
 				target = '';
 			}
-		} else {
-			command = this.command;
-			target = this.target;
 		}
 
 		if (typeof Commands[command] !== 'function') return false;
 
 		try {
 			// @ts-ignore Typescript bug - issue #10530
-			Commands[command].call(this, target, this.room, this.user, this.command, this.time);
+			Commands[command].call(this, target, this.room, this.user, originalCommand, this.time);
 		} catch (e) {
 			let stack = e.stack;
 			stack += 'Additional information:\n';
@@ -126,7 +128,7 @@ class MessageParser {
 	constructor() {
 		this.formatsList = [];
 		this.formatsData = {};
-		this.globalContext = new Context('', Rooms.globalRoom, Users.self, '');
+		this.globalContext = new Context('', Rooms.globalRoom, Users.self, '', '');
 	}
 
 	/**
@@ -145,8 +147,7 @@ class MessageParser {
 		}
 		switch (messageType) {
 		case 'challstr':
-			Client.challengeKeyId = splitMessage[0];
-			Client.challenge = splitMessage[1];
+			Client.challstr = splitMessage.join("|");
 			Client.login();
 			break;
 		case 'updateuser':
@@ -261,6 +262,14 @@ class MessageParser {
 			let user = Users.add(splitMessage[0]);
 			if (!user) return;
 			room.onJoin(user, splitMessage[0].charAt(0));
+			if (Storage.globalDatabase.mail && user.id in Storage.globalDatabase.mail) {
+				let mail = Storage.globalDatabase.mail[user.id];
+				for (let i = 0, len = mail.length; i < len; i++) {
+					user.say("[" + Tools.toDurationString(Date.now() - mail[i].time) + " ago] **" + mail[i].from + "** said: " + mail[i].text);
+				}
+				delete Storage.globalDatabase.mail[user.id];
+				Storage.exportDatabase('global');
+			}
 			break;
 		}
 		case 'L':
@@ -349,13 +358,14 @@ class MessageParser {
 		}
 		command = Tools.toId(command);
 		if (!Commands[command]) return;
+		let originalCommand = command;
 		if (typeof Commands[command] === 'string') {
 			// @ts-ignore Typescript bug - issue #10530
 			command = Commands[command];
 		}
 		if (typeof Commands[command] !== 'function') return;
 
-		return new Context(target, room, user, command, time).run();
+		return new Context(target, room, user, command, originalCommand, time).run();
 	}
 
 	parseFormats() {
@@ -428,7 +438,7 @@ class MessageParser {
 		}
 		if (!Config.punishmentPoints || !Config.punishmentActions) return;
 
-		message = message.trim().replace(whitespaceRegex, '').replace(nullCharactersRegex, '');
+		message = Tools.trim(message);
 
 		let data = user.roomData.get(room);
 		if (!data) {

@@ -13,6 +13,9 @@ const https = require('https');
 const url = require('url');
 const Data = require('./tools-data');
 
+const whitespaceRegex = new RegExp('\\s+', 'g');
+const nullCharactersRegex = new RegExp('[\u0000\u200B-\u200F]+', 'g');
+
 /**
 * @typedef Learnset
 * @type {Object}
@@ -34,6 +37,7 @@ const Data = require('./tools-data');
 * @property {Array<string>} [randomDoubleBattleMoves]
 * @property {Array<{generation: number, level?: number, moves?: Array<string>, abilities?: Array<string>, pokeball?: string, gender?: string, isHidden?: boolean, shiny?: number | boolean, ivs?: {[k: string]: number}, nature?: string}>} [eventPokemon]
 * @property {string} [tier]
+* @property {string} [doublesTier]
 * @property {string} [requiredItem]
 */
 
@@ -49,6 +53,7 @@ const Data = require('./tools-data');
 * @property {{[k: string]: TypeChart}} typeChart
 * @property {{[k: string]: FormatData}} formatsData
 * @property {Array<Array<string>>} teams
+* @property {Array<String>} trainerClasses
 */
 
 class Tools {
@@ -64,6 +69,7 @@ class Tools {
 			typeChart: {},
 			formatsData: {},
 			teams: [],
+			trainerClasses: [],
 		};
 		this.gen = 7;
 		this.dataFilePath = './data/';
@@ -101,6 +107,7 @@ class Tools {
 		this.loadLearnsets();
 		this.loadFormatsData();
 		this.loadTeams();
+		this.loadTrainerClasses();
 
 		this.loadedData = true;
 	}
@@ -213,6 +220,18 @@ class Tools {
 		if (teams) this.data.teams = teams;
 	}
 
+	loadTrainerClasses() {
+		let trainerClasses;
+		try {
+			trainerClasses = require(this.dataFilePath + 'trainer-classes.js').BattleTrainerClasses;
+		} catch (e) {
+			if (e.code !== 'MODULE_NOT_FOUND') {
+				throw e;
+			}
+		}
+		if (trainerClasses) this.data.trainerClasses = trainerClasses;
+	}
+
 	/**
 	 * @param {any} text
 	 * @return {string}
@@ -270,6 +289,79 @@ class Tools {
 
 	/**
 	 * @param {any} text
+	 * @return {string}
+	 */
+	toAlphaNumeric(text) {
+		text = this.toString(text);
+		if (!text) return '';
+		return text.replace(/[^a-zA-Z0-9 ]/g, '').trim();
+	}
+
+	/**
+	 * @param {string} text
+	 * @return {string}
+	 */
+	trim(text) {
+		return text.trim().replace(whitespaceRegex, ' ').replace(nullCharactersRegex, '');
+	}
+
+	/**
+	 * @param {Array<string>} list
+	 * @param {string} [formatting]
+	 * @return {string}
+	 */
+	joinList(list, formatting) {
+		if (!list.length) return '';
+		if (!formatting) formatting = '';
+		if (list.length === 1) {
+			return formatting + list[0] + formatting;
+		} else if (list.length === 2) {
+			return formatting + list[0] + formatting + " and " + formatting + list[1] + formatting;
+		} else {
+			let len = list.length - 1;
+			return formatting + list.slice(0, len).join(formatting + ", " + formatting) + formatting + ", and " + formatting + list[len] + formatting;
+		}
+	}
+
+	/**
+	 * @param {Array<string>} list
+	 * @param {string} tag
+	 * @return {string}
+	 */
+	joinListHtml(list, tag) {
+		if (!list.length) return '';
+		let openingTag = tag;
+		let closingTag = '</' + tag.substr(1);
+		if (list.length === 1) {
+			return openingTag + list[0] + closingTag;
+		} else if (list.length === 2) {
+			return openingTag + list[0] + closingTag + " and " + openingTag + list[1] + closingTag;
+		} else {
+			let len = list.length - 1;
+			return openingTag + list.slice(0, len).join(closingTag + ", " + openingTag) + closingTag + ", and " + openingTag + list[len] + closingTag;
+		}
+	}
+
+	/**
+	 * @param {string} str
+	 * @return {string}
+	 */
+	escapeHTML(str) {
+		if (!str) return '';
+		return ('' + str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;').replace(/\//g, '&#x2f;');
+	}
+
+	/**
+	 * @param {string} str
+	 * @return {string}
+	 */
+	unescapeHTML(str) {
+		if (!str) return '';
+		return ('' + str).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&#x2f;/g, '/').replace(/&#39;/g, "'").replace(/&#34;/g, '"');
+	}
+
+	/**
+	 * @param {any} text
 	 * @param {any} [room]
 	 * @return {string}
 	 */
@@ -296,11 +388,11 @@ class Tools {
 	}
 
 	/**
-	 * @param {Array} array
-	 * @return {Array}
+	 * @template T
+	 * @param {Array<T>} array
+	 * @return {Array<T>}
 	 */
 	shuffle(array) {
-		if (!(array instanceof Array)) return array;
 		array = array.slice();
 
 		// Fisher-Yates shuffle algorithm
@@ -322,25 +414,36 @@ class Tools {
 	}
 
 	/**
-	 * @param {Array} array
-	 * @param {number} [amount]
+	 * @template T
+	 * @param {Array<T>} array
+	 * @return {T}
 	 */
-	sample(array, amount) {
-		if (!(array instanceof Array)) return;
+	sampleOne(array) {
 		let len = array.length;
-		if (!len) return;
-		if (len === 1 || !amount || amount === 1) return array.slice()[Math.floor(Math.random() * len)];
-		if (amount > len) {
-			amount = len;
-		} else if (amount < 0) {
-			amount = 0;
-		}
+		if (!len) throw new Error("Tools.sampleOne() does not accept empty arrays");
+		if (len === 1) return array.slice()[0];
+		return this.shuffle(array)[0];
+	}
+
+	/**
+	 * @template T
+	 * @param {Array<T>} array
+	 * @param {number | string} amount
+	 * @return {Array<T>}
+	 */
+	sampleMany(array, amount) {
+		let len = array.length;
+		if (!len) throw new Error("Tools.sampleMany() does not accept empty arrays");
+		if (len === 1) return array.slice();
+		if (typeof amount === 'string') amount = parseInt(amount);
+		if (!amount || isNaN(amount)) throw new Error("Invalid amount in Tools.sampleMany()");
+		if (amount > len) amount = len;
 		return this.shuffle(array).splice(0, amount);
 	}
 
 	/**
 	 * @param {Pokemon | string} name
-	 * @return {Pokemon}
+	 * @return {?Pokemon}
 	 */
 	getPokemon(name) {
 		if (name instanceof Data.Pokemon) return name;
@@ -349,18 +452,61 @@ class Tools {
 			name = this.data.aliases[id];
 			id = this.toId(name);
 		}
-		// @ts-ignore
-		if (id === 'constructor' || !(id in this.data.pokedex)) return null;
 		let pokemon = this.PokemonCache.get(id);
 		if (pokemon) return pokemon;
+		if (id === 'constructor') return null;
+		if (!(id in this.data.pokedex)) {
+			let aliasTo = '';
+			if (id.startsWith('mega') && this.data.pokedex[id.slice(4) + 'mega']) {
+				aliasTo = id.slice(4) + 'mega';
+			} else if (id.startsWith('m') && this.data.pokedex[id.slice(1) + 'mega']) {
+				aliasTo = id.slice(1) + 'mega';
+			} else if (id.startsWith('primal') && this.data.pokedex[id.slice(6) + 'primal']) {
+				aliasTo = id.slice(6) + 'primal';
+			} else if (id.startsWith('p') && this.data.pokedex[id.slice(1) + 'primal']) {
+				aliasTo = id.slice(1) + 'primal';
+			}
+			if (aliasTo) {
+				let pokemon = this.getPokemon(aliasTo);
+				if (pokemon) {
+					this.PokemonCache.set(id, pokemon);
+					return pokemon;
+				}
+			}
+			return null;
+		}
 		pokemon = new Data.Pokemon(name, this.data.pokedex[id], this.data.learnsets[id], this.data.formatsData[id]);
+		if (!pokemon.tier && !pokemon.doublesTier && pokemon.baseSpecies !== pokemon.species) {
+			if (pokemon.baseSpecies === 'Mimikyu') {
+				pokemon.tier = this.data.formatsData[this.toId(pokemon.baseSpecies)].tier;
+				pokemon.doublesTier = this.data.formatsData[this.toId(pokemon.baseSpecies)].doublesTier;
+			} else if (pokemon.speciesid.endsWith('totem')) {
+				pokemon.tier = this.data.formatsData[pokemon.speciesid.slice(0, -5)].tier;
+				pokemon.doublesTier = this.data.formatsData[pokemon.speciesid.slice(0, -5)].doublesTier;
+			} else {
+				pokemon.tier = this.data.formatsData[this.toId(pokemon.baseSpecies)].tier;
+				pokemon.doublesTier = this.data.formatsData[this.toId(pokemon.baseSpecies)].doublesTier;
+			}
+		}
+		if (!pokemon.tier) pokemon.tier = 'Illegal';
+		if (!pokemon.doublesTier) pokemon.doublesTier = pokemon.tier;
 		this.PokemonCache.set(id, pokemon);
 		return pokemon;
 	}
 
 	/**
+	 * @param {Pokemon | string} name
+	 * @return {Pokemon}
+	 */
+	getExistingPokemon(name) {
+		let pokemon = this.getPokemon(name);
+		if (!pokemon) throw new Error("Expected Pokemon for '" + name + "'");
+		return pokemon;
+	}
+
+	/**
 	 * @param {Move | string} name
-	 * @return {Move}
+	 * @return {?Move}
 	 */
 	getMove(name) {
 		if (name instanceof Data.Move) return name;
@@ -369,7 +515,6 @@ class Tools {
 			name = this.data.aliases[id];
 			id = this.toId(name);
 		}
-		// @ts-ignore
 		if (id === 'constructor' || !(id in this.data.moves)) return null;
 		let move = this.MoveCache.get(id);
 		if (move) return move;
@@ -379,8 +524,18 @@ class Tools {
 	}
 
 	/**
+	 * @param {Move | string} name
+	 * @return {Move}
+	 */
+	getExistingMove(name) {
+		let move = this.getMove(name);
+		if (!move) throw new Error("Expected move for '" + name + "'");
+		return move;
+	}
+
+	/**
 	 * @param {Item | string} name
-	 * @return {Item}
+	 * @return {?Item}
 	 */
 	getItem(name) {
 		if (name instanceof Data.Item) return name;
@@ -389,7 +544,6 @@ class Tools {
 			name = this.data.aliases[id];
 			id = this.toId(name);
 		}
-		// @ts-ignore
 		if (id === 'constructor' || !(id in this.data.items)) return null;
 		let item = this.ItemCache.get(id);
 		if (item) return item;
@@ -399,8 +553,18 @@ class Tools {
 	}
 
 	/**
+	 * @param {Item | string} name
+	 * @return {Item}
+	 */
+	getExistingItem(name) {
+		let item = this.getItem(name);
+		if (!item) throw new Error("Expected item for '" + name + "'");
+		return item;
+	}
+
+	/**
 	 * @param {Ability | string} name
-	 * @return {Ability}
+	 * @return {?Ability}
 	 */
 	getAbility(name) {
 		if (name instanceof Data.Ability) return name;
@@ -409,7 +573,6 @@ class Tools {
 			name = this.data.aliases[id];
 			id = this.toId(name);
 		}
-		// @ts-ignore
 		if (id === 'constructor' || !(id in this.data.abilities)) return null;
 		let ability = this.AbilityCache.get(id);
 		if (ability) return ability;
@@ -419,8 +582,18 @@ class Tools {
 	}
 
 	/**
+	 * @param {Ability | string} name
+	 * @return {Ability}
+	 */
+	getExistingAbility(name) {
+		let ability = this.getAbility(name);
+		if (!ability) throw new Error("Expected ability for '" + name + "'");
+		return ability;
+	}
+
+	/**
 	 * @param {Format | string} name
-	 * @return {Format}
+	 * @return {?Format}
 	 */
 	getFormat(name) {
 		if (name instanceof Data.Format) return name;
@@ -429,12 +602,21 @@ class Tools {
 			name = this.data.aliases[id];
 			id = this.toId(name);
 		}
-		// @ts-ignore
 		if (id === 'constructor' || !(id in MessageParser.formatsData)) return null;
 		let format = this.FormatCache.get(id);
 		if (format) return format;
 		format = new Data.Format(name, MessageParser.formatsData[id]);
 		this.FormatCache.set(id, format);
+		return format;
+	}
+
+	/**
+	 * @param {Format | string} name
+	 * @return {Format}
+	 */
+	getExistingFormat(name) {
+		let format = this.getFormat(name);
+		if (!format) throw new Error("Expected format for '" + name + "'");
 		return format;
 	}
 

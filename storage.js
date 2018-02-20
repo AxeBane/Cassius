@@ -15,6 +15,7 @@ const BACKUP_INTERVAL = 60 * 60 * 1000;
 class Storage {
 	constructor() {
 		this.databases = {};
+		this.globalDatabase = {};
 		this.backupInterval = setInterval(() => this.exportDatabases(), BACKUP_INTERVAL);
 	}
 
@@ -75,7 +76,8 @@ class Storage {
 		if (!('leaderboard' in database)) database.leaderboard = {};
 		if (!(user.id in database.leaderboard)) database.leaderboard[user.id] = {points: 0};
 		database.leaderboard[user.id].points += points;
-		if (database.leaderboard[user.id].name !== user.name) database.leaderboard[user.id].name = user.name;
+		let name = Tools.toAlphaNumeric(user.name);
+		if (database.leaderboard[user.id].name !== name) database.leaderboard[user.id].name = name;
 	}
 
 	/**

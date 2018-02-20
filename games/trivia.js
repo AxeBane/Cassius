@@ -16,7 +16,7 @@ const data = {
 };
 
 for (let i in Tools.data.moves) {
-	let move = Tools.getMove(i);
+	let move = Tools.getExistingMove(i);
 	if (!move.name) continue;
 	let desc = move.desc || move.shortDesc;
 	if (!desc) continue;
@@ -25,7 +25,7 @@ for (let i in Tools.data.moves) {
 }
 
 for (let i in Tools.data.items) {
-	let item = Tools.getItem(i);
+	let item = Tools.getExistingItem(i);
 	if (!item.name) continue;
 	let desc = item.desc || item.shortDesc;
 	if (!desc) continue;
@@ -34,7 +34,7 @@ for (let i in Tools.data.items) {
 }
 
 for (let i in Tools.data.abilities) {
-	let ability = Tools.getAbility(i);
+	let ability = Tools.getExistingAbility(i);
 	if (!ability.name) continue;
 	let desc = ability.desc || ability.shortDesc;
 	if (!desc) continue;
@@ -74,9 +74,9 @@ class Trivia extends Games.Game {
 		if (this.variation) {
 			category = this.variation;
 		} else {
-			category = Tools.sample(this.categories);
+			category = Tools.sampleOne(this.categories);
 		}
-		let question = Tools.sample(this.questions[category]);
+		let question = Tools.sampleOne(this.questions[category]);
 		this.answers = data[category][question];
 		this.hint = "**" + category + "**: " + question;
 	}
