@@ -50,7 +50,7 @@ let roles = ["Protagonist", "Antagonist", "Major character", "Minor character"];
 let pronouns = {'male': 'he', 'female': 'she', 'hermaphrodite': 'shi', 'neuter': 'they'};
 let possessivePronouns = {'male': 'His', 'female': 'Her', 'hermaphrodite': 'Hir', 'neuter': 'Their'};
 let types = ["Normal", "Fire", "Water", "Electric", "Grass", "Ice", "Fighting", "Poison", "Flying", "Ground", "Psychic", "Bug", "Rock", "Ghost", "Dragon", "Dark", "Steel", "Fairy", "Bird"];
-/* Shop Merchandise 
+/* Shop Merchandise
  * 1st Element: Name
  * 2nd Element: Description
  * 3rd Element: Price
@@ -439,12 +439,13 @@ let commands = {
 		if (pokequantity === 1 && !(room instanceof Users.User) && user.hasRank(room, '+')) text = '!dt ';
 
 		let attempt = -1;
+		/**@type {Array<number>} */
 		let dexNumbers = [];
 		let pokedex = [];
 		if (parameters.length > 0) {
 			//create an array for all dex numbers and then shuffle it
 			for (let i in Tools.data.pokedex) {
-				let pokemon = Tools.getPokemon(i);
+				let pokemon = Tools.getExistingPokemon(i);
 				dexNumbers.push(pokemon.num);
 				pokedex[pokemon.num] = pokemon;
 			}
@@ -582,7 +583,7 @@ let commands = {
 		let randomMoves = [];
 		let moveDex = [];
 		for (let i in Tools.data.moves) {
-			moveDex.push(Tools.getMove(i));
+			moveDex.push(Tools.getExistingMove(i));
 		}
 		moveDex = Tools.shuffle(moveDex);
 		for (let j = 0; j < moveQuantity; j++) {
@@ -896,7 +897,7 @@ let commands = {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		this.say(text + 'Interested in becoming a voice? Check out the guideines for your chance at having a shot! http://bit.do/pswritingvoicerules or http://bit.do/pswritingvoicerap');
 	},
-	//Starts timed announcements. 
+	//Starts timed announcements.
 	//NOTE: Broken? Hard to tell.
 	/*
 	announce: function (target, room, user) {
