@@ -774,13 +774,13 @@ let commands = {
 				if (!(room instanceof Users.User) && Users.self.rooms.get(room) === '*') {
 					return this.pmHtml(user, boxpm);
 				} else {
-					return this.say(text + "Today's Myth of the Week is **" + Tools.toId(database.motw.myth) + "**: " + database.motw.desc + ' | ' + database.motw.image);
+					return this.say(text + "Today's Myth of the Week is **" + Tools.toId(database.motw.myth.replace(/\s+/g, '')) + "**: " + database.motw.desc + ' | ' + database.motw.image);
 				}
 			}
 		}
 		if (Tools.toId(target) === 'check' || Tools.toId(target) === 'time') {
 			if (!database.motw) return this.say(text + "There is no Myth of the Week to check!");
-			return this.say(text + "The Myth of the Week was last updated to **" + database.motw.myth + "** " + Tools.toDurationString(Date.now() - database.motw.time) + " ago by " + database.motw.user);
+			return this.say(text + "The Myth of the Week was last updated to **" + database.motw.myth.replace(/\s+/g, '') + "** " + Tools.toDurationString(Date.now() - database.motw.time) + " ago by " + database.motw.user);
 		}
 		let targets = target.split(',');
 		let typo = false;
