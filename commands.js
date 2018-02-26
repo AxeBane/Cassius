@@ -61,7 +61,7 @@ let commands = {
 		}
 		database.mail[to].push({time: Date.now(), from: user.name, text: message});
 		Storage.exportDatabase('global');
-		this.say("Your message has been sent to " + targets[0] + "!");
+		this.say("Your message has been sent to " + targets[0].replace(/\s+/g, '') + "!");
 	},
 
 	// Game commands
