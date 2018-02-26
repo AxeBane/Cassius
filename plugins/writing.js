@@ -696,13 +696,13 @@ let commands = {
 				if (!(room instanceof Users.User) && Users.self.rooms.get(room) === '*') {
 					return this.pmHtml(user, boxpm);
 				} else {
-					return this.say(text + "Today's Word of the Day is **" + database.wotd.word.replace(/\s+/g, '') + "**: " + database.wotd.kind + " [__" + database.wotd.pron + "__] - " + database.wotd.definition);
+					return this.say(text + "Today's Word of the Day is **" + database.wotd.word.trim() + "**: " + database.wotd.kind + " [__" + database.wotd.pron + "__] - " + database.wotd.definition);
 				}
 			}
 		}
 		if (Tools.toId(target) === 'check' || Tools.toId(target) === 'time') {
 			if (!database.wotd) return this.say(text + "There is no Word of the Day to check!");
-			return this.say(text + "The Word of the Day was last updated to **" + database.wotd.word.replace(/\s+/g, '') + "** " + Tools.toDurationString(Date.now() - database.wotd.time) + " ago by " + database.wotd.user);
+			return this.say(text + "The Word of the Day was last updated to **" + database.wotd.word.trim() + "** " + Tools.toDurationString(Date.now() - database.wotd.time) + " ago by " + database.wotd.user);
 		}
 		let targets = target.split(', ');
 		let typo = false;
@@ -767,7 +767,7 @@ let commands = {
 			let box = `<div style="background-image: url(${database.motw.image}); background-size: contain; background-position: center; background-color: black; height: 200px; background-repeat: no-repeat"></div>`;
 			let boxChat = `<div style="background-image: url(${database.motw.image}); background-size: contain; background-position: center; background-color: black; height: 250px; background-repeat: no-repeat"></div>`;
 			let boxpm2 = `<div style="background:purple;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"><span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:#6688AA;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-fire" aria-hidden="true"></i> Myth of the Week <i class="fa fa-fire" aria-hidden="true"></i></span> <center>${box}<br><span style="font-size:30pt;display:block;">${database.motw.myth} </span><p style="font-size:19px">Info: ${database.motw.desc}</p></center><span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:2px;"></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong></span><div style="width:100%;padding:2px 0;border:1px solid #6688AA;display:block;font-family:sans-serif;font-size:9.5pt;text-align:center;margin-top:15px;border-radius:2px;"><span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ${database.motw.user} ${tem}</span> </div></div></div>`;
-			let realBox = `<div style="background:purple;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"><span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:#6688AA;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-fire" aria-hidden="true"></i> Myth of the Week <i class="fa fa-fire" aria-hidden="true"></i></span> <center>${box}<br><span style="font-size:30pt;display:block;">${database.motw.myth} </span><p style="font-size:19px">Info: ${database.motw.desc}</p></center><span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:2px;"></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong></span><div style="width:100%;padding:2px 0;border:1px solid #6688AA;display:block;font-family:sans-serif;font-size:9.5pt;text-align:center;margin-top:15px;border-radius:2px;"><span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ${database.motw.user} ${tem}</span> </div></div></div>`;
+			let realBox = `<div style="background:purple;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"><span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:#6688AA;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-fire" aria-hidden="true"></i> Myth of the Week <i class="fa fa-fire" aria-hidden="true"></i></span> <center>${boxChat}<br><span style="font-size:30pt;display:block;">${database.motw.myth} </span><p style="font-size:19px">Info: ${database.motw.desc}</p></center><span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:2px;"></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong></span><div style="width:100%;padding:2px 0;border:1px solid #6688AA;display:block;font-family:sans-serif;font-size:9.5pt;text-align:center;margin-top:15px;border-radius:2px;"><span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ${database.motw.user} ${tem}</span> </div></div></div>`;
 			if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
 				return this.sayHtml(realBox);
 			} else {
@@ -775,13 +775,13 @@ let commands = {
 				if (!(room instanceof Users.User) && Users.self.rooms.get(room) === '*') {
 					return this.pmHtml(user, boxpm);
 				} else {
-					return this.say(text + "Today's Myth of the Week is **" + Tools.toId(database.motw.myth.replace(/\s+/g, '')) + "**: " + database.motw.desc + ' | ' + database.motw.image);
+					return this.say(text + "Today's Myth of the Week is **" + Tools.toId(database.motw.myth.trim()) + "**: " + database.motw.desc + ' | ' + database.motw.image);
 				}
 			}
 		}
 		if (Tools.toId(target) === 'check' || Tools.toId(target) === 'time') {
 			if (!database.motw) return this.say(text + "There is no Myth of the Week to check!");
-			return this.say(text + "The Myth of the Week was last updated to **" + database.motw.myth.replace(/\s+/g, '') + "** " + Tools.toDurationString(Date.now() - database.motw.time) + " ago by " + database.motw.user);
+			return this.say(text + "The Myth of the Week was last updated to **" + database.motw.myth.trim() + "** " + Tools.toDurationString(Date.now() - database.motw.time) + " ago by " + database.motw.user);
 		}
 		let targets = target.split(',');
 		let typo = false;
