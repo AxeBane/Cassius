@@ -773,7 +773,7 @@ let commands = {
 			} else {
 				// The below is a hacky way to get pminfobox to work within PM. It defaults to Writing since AxeBot/The Scribe is always * in that room. For personal bots, this should be changed to any room that you can guarentee the bot has at least * permissions.
 				if (!(room instanceof Users.User) && Users.self.rooms.get(room) === '*') {
-					return this.pmHtml(user, boxpm);
+					return this.pmHtml(user, boxpm2);
 				} else {
 					return this.say(text + "Today's Myth of the Week is **" + Tools.toId(database.motw.myth.trim()) + "**: " + database.motw.desc + ' | ' + database.motw.image);
 				}
