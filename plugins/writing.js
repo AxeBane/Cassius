@@ -812,7 +812,7 @@ let commands = {
 			hasPerms = true;
 		}
 		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the Myth of the Week.');
-		if (targets.length < 3) return this.say(text + "Invalid arguments specified. The format is: __myth__, __description__, __image link__.");
+		if (targets.length < 3) return this.say(text + "Invalid arguments specified. The format is: __motw__, __description__, __image link__.");
 		let motw = {
 			myth: targets[0],
 			desc: targets[1],
