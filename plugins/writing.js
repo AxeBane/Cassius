@@ -935,7 +935,7 @@ let commands = {
 	activities: 'games',
 	games: function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + 'Visit this page for a list of our various games and activities: http://pswriting.weebly.com/games--activities.html');
+		this.say(text + 'Visit this page for a list of our various games and activities: http://pswriting.weebly.com/games.html');
 	},
 	//Sunday scribing hype. :o
 	//NOTE: Probably needs updating.
