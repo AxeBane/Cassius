@@ -836,7 +836,8 @@ let commands = {
 	//Returns the link to the Writing Room's website.
 	site: function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + "Writing Room's Website: http://pswriting.weebly.com/");
+		if (room.id == 'writing') return this.say(text + "Writing Room's Website: http://pswriting.weebly.com/");
+		if (room.id == 'canalavelibrary') return this.say(text + "Canalave Library Room's Website: https://pscanalavelibrary.weebly.com/");
 	},
 	//Returns the current time of day! ...For the bot, that is.
 	time: function (target, room, user) {
