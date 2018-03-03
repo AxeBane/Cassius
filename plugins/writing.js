@@ -696,13 +696,13 @@ let commands = {
 				if (!(room instanceof Users.User) && Users.self.rooms.get(room) === '*') {
 					return this.pmHtml(user, boxpm);
 				} else {
-					return this.say(text + "Today's Word of the Day is **" + database.wotd.word.trim() + "**: " + database.wotd.kind + " [__" + database.wotd.pron + "__] - " + database.wotd.definition);
+					return this.say(text + "Today's Word of the Day is **" + database.wotd.word + "**: " + database.wotd.kind + " [__" + database.wotd.pron + "__] - " + database.wotd.definition);
 				}
 			}
 		}
 		if (Tools.toId(target) === 'check' || Tools.toId(target) === 'time') {
 			if (!database.wotd) return this.say(text + "There is no Word of the Day to check!");
-			return this.say(text + "The Word of the Day was last updated to **" + database.wotd.word.trim() + "** " + Tools.toDurationString(Date.now() - database.wotd.time) + " ago by " + database.wotd.user);
+			return this.say(text + "The Word of the Day was last updated to **" + database.wotd.word + "** " + Tools.toDurationString(Date.now() - database.wotd.time) + " ago by " + database.wotd.user);
 		}
 		let targets = target.split(', ');
 		let typo = false;
@@ -736,7 +736,7 @@ let commands = {
 		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the Word of the Day.');
 		if (targets.length < 4) return this.say(text + "Invalid arguments specified. The format is: __word__, __pronunciation__, __part of speech__, __defintion__.");
 		let wotd = {
-			word: targets[0],
+			word: targets[0].trim(),
 			pron: targets[1],
 			kind: targets[2],
 			definition: targets.slice(3).join(', ').trim(),
@@ -756,7 +756,7 @@ let commands = {
 		Storage.exportDatabase('writing');
 		this.say(text + "The Word of the Day has been set to '" + targets[0] + "'!");
 	},
-	// Returns the myth of the day for mythology room
+	// Returns the Myth of the day for Canalave library room!
 	'mythoftheweek': 'motd',
 	motw: function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
@@ -775,13 +775,13 @@ let commands = {
 				if (!(room instanceof Users.User) && Users.self.rooms.get(room) === '*') {
 					return this.pmHtml(user, boxpm2);
 				} else {
-					return this.say(text + "Today's Myth of the Week is **" + Tools.toId(database.motw.myth.trim()) + "**: " + database.motw.desc + ' | ' + database.motw.image);
+					return this.say(text + "Today's Myth of the Week is **" + database.motw.myth + "**: " + database.motw.desc + ' | ' + database.motw.image);
 				}
 			}
 		}
 		if (Tools.toId(target) === 'check' || Tools.toId(target) === 'time') {
 			if (!database.motw) return this.say(text + "There is no Myth of the Week to check!");
-			return this.say(text + "The Myth of the Week was last updated to **" + database.motw.myth.trim() + "** " + Tools.toDurationString(Date.now() - database.motw.time) + " ago by " + database.motw.user);
+			return this.say(text + "The Myth of the Week was last updated to **" + database.motw.myth + "** " + Tools.toDurationString(Date.now() - database.motw.time) + " ago by " + database.motw.user);
 		}
 		let targets = target.split(',');
 		let typo = false;
@@ -815,7 +815,7 @@ let commands = {
 		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the Myth of the Week.');
 		if (targets.length < 3) return this.say(text + "Invalid arguments specified. The format is: __motw__, __description__, __image link__.");
 		let motw = {
-			myth: targets[0],
+			myth: targets[0].trim(),
 			desc: targets[1],
 			image: targets[2],
 		};
@@ -835,9 +835,11 @@ let commands = {
 		this.say(text + "The Myth of the Week has been set to '" + targets[0] + "'!");
 	},
 	//Returns the link to the Writing Room's website.
-	site: function (target, room, user) {
+	site: 'website',
+	website: function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + "Writing Room's Website: http://pswriting.weebly.com/");
+		if (room.id === 'writing') return this.say(text + "Writing Room's Website: http://pswriting.weebly.com/");
+		if (room.id === 'canalavelibrary') return this.say(text + "Canalave Library Room's Website: https://pscanalavelibrary.weebly.com/");
 	},
 	//Returns the current time of day! ...For the bot, that is.
 	time: function (target, room, user) {
@@ -913,7 +915,7 @@ let commands = {
 			text += "If you're new to the Writing room, be sure to read our website: http://pswriting.weebly.com/";
 			break;
 		case 'canalavelibrary':
-			text += "Welcome to Myths & Magic! In this room, we, well... talk about mythology and magic! Though, discussion of black magic is not encouraged.";
+			text += "Welcome to Myths & Magic! In this room, we, well... talk about mythology and magic! Though, discussion of black magic is not encouraged. Website: https://pscanalavelibrary.weebly.com/";
 			break;
 		default:
 			text += "Welcome to the room!";
