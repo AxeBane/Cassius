@@ -757,7 +757,7 @@ let commands = {
 		this.say(text + "The Word of the Day has been set to '" + targets[0] + "'!");
 	},
 	// Returns the Myth of the day for Canalave library room!
-	'mythoftheweek': 'motd',
+	'mythoftheweek': 'motw',
 	motw: function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		if (room.id !== 'canalavelibrary') return this.pm(user, 'Please use this command in Canalave Library only.');
