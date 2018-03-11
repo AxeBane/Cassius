@@ -893,7 +893,7 @@ let commands = {
 			title: targets[0].trim(),
 			date: targets [1],
 			location: targets [2],
-			description: targets[3].trim(),			
+			description: targets[3].trim(),
 		};
 		if (!typo) {
 			hotd.time = Date.now();
