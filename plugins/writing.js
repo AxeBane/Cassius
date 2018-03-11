@@ -687,8 +687,8 @@ let commands = {
 		if (!target) {
 			if (!database.wotd) return this.say(text + "No Word of the Day has been set.");
 			let tem = new Date(database.wotd.time).toLocaleString('en-US', {hour: 'numeric', minute:'numeric', day:'2-digit', month:'long', hour12: true, timeZoneName: 'short'});
-			let box = '<div style="background:url(https://i.imgur.com/loMDPK2.jpg) center;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"> <span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:#6688AA;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-book" aria-hidden="true"></i> Word of the Day <i class="fa fa-pencil" aria-hidden="true"></i></span> <span style="font-size:30pt;display:block;">' + database.wotd.word + '</span> <span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:2px;">' + database.wotd.pron + ' / <strong style="letter-spacing:0;">' + database.wotd.kind + '</strong></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)">1.</strong>' + database.wotd.definition + '</span><div style="width:100%;padding:2px 0;border:1px solid #6688AA;display:block;font-family:sans-serif;font-size:9.5pt;color:#6688AA;text-align:center;margin-top:15px;border-radius:2px;"> <span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ' + database.wotd.user + ' on ' + tem + '</span> </div></div></div>';
-			let boxpm = '<div style="background:url(https://i.imgur.com/loMDPK2.jpg) center;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"> <span style="display:block;font-family:serif;font-size:14pt;font-style:oblique;background:#6688AA;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;">Word of the Day</span> <span style="font-size:20pt;display:block;">' + database.wotd.word + '</span> <span style="font-family:sans-serif;font-size:11pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:2px;">' + database.wotd.pron + ' / <strong style="letter-spacing:0;">' + database.wotd.kind + '</strong></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)">1.</strong>' + database.wotd.definition + '</span></div></div>';
+			let box = '<div style="background:url(https://i.imgur.com/EQh19sO.png) center;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"> <span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:#6d6d6d;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-tree" aria-hidden="true"></i> History of the Day <i class="fa fa-university" aria-hidden="true"></i></span> <span style="font-size:30pt;display:block;">' + database.hotd.title + '</span> <span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:0px;">' + database.hotd.date + ' - <strong style="letter-spacing:0;">' + database.hotd.location + '</strong></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong>' + database.hotd.description + '</span><div style="width:100%;padding:2px 0;border:1px solid #fff;display:block;font-family:sans-serif;font-size:9.5pt;color:#fff;text-align:center;margin-top:15px;border-radius:2px;"> <span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ' + database.hotd.user + ' on ' + tem + '</span></div></div></div>';
+			let boxpm = '<div style="background:url(https://i.imgur.com/4hHIkXk.png) center;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"> <span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:#6d6d6d;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-tree" aria-hidden="true"></i> History of the Day <i class="fa fa-university" aria-hidden="true"></i></span> <span style="font-size:30pt;display:block;">' + database.hotd.title + '</span> <span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:0px;">' + database.hotd.date + ' - <strong style="letter-spacing:0;">' + database.hotd.location + '</strong></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong>' + database.hotd.description + '</span><div style="width:100%;padding:2px 0;border:1px solid #6688AA;display:block;font-family:sans-serif;font-size:9.5pt;color:#6d6d6d;text-align:center;margin-top:15px;border-radius:2px;"> <span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ' + database.hotd.user + ' on ' + tem + '</span></div></div></div>';
 			if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
 				return this.sayHtml(box);
 			} else {
@@ -833,6 +833,83 @@ let commands = {
 		database.motwHistory.push(motw);
 		Storage.exportDatabase('writing');
 		this.say(text + "The Myth of the Week has been set to '" + targets[0] + "'!");
+	},
+	// Returns the history of the day for mythology room
+	'history': 'hotd',
+	hotd: function (target, room, user) {
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
+		if (room.id !== 'canalavelibrary') return this.pm(user, 'Please use this command in Canalave Library only.');
+		if (!target) {
+			if (!database.hotd) return this.say(text + "No History of the Day has been set.");
+			let tem = new Date(database.hotd.time).toLocaleString('en-US', {hour: 'numeric', minute:'numeric', day:'2-digit', month:'long', hour12: true, timeZoneName: 'short'});
+			let box = '<div style="background:url(https://i.imgur.com/4hHIkXk.png) center;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"> <span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:#6d6d6d;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-tree" aria-hidden="true"></i> History of the Day <i class="fa fa-university" aria-hidden="true"></i></span> <span style="font-size:30pt;display:block;">' + database.hotd.title + '</span> <span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:0px;">' + database.hotd.date + ' - <strong style="letter-spacing:0;">' + database.hotd.location + '</strong></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong>' + database.hotd.description + '</span><div style="width:100%;padding:2px 0;border:1px solid #6d6d6d;display:block;font-family:sans-serif;font-size:9.5pt;color:#6d6d6d;text-align:center;margin-top:15px;border-radius:2px;"> <span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ' + database.hotd.user + ' on ' + tem + '</span></div></div></div>';
+			let boxpm = '<div style="background:url(https://i.imgur.com/EQh19sO.png) center;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"> <span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:#6d6d6d;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-tree" aria-hidden="true"></i> History of the Day <i class="fa fa-university" aria-hidden="true"></i></span> <span style="font-size:30pt;display:block;">' + database.hotd.title + '</span> <span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:0px;">' + database.hotd.date + ' - <strong style="letter-spacing:0;">' + database.hotd.location + '</strong></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong>' + database.hotd.description + '</span><div style="width:100%;padding:2px 0;border:1px solid #fff;display:block;font-family:sans-serif;font-size:9.5pt;color:#fff;text-align:center;margin-top:15px;border-radius:2px;"> <span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ' + database.hotd.user + ' on ' + tem + '</span></div></div></div>';
+			if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
+				return this.sayHtml(box);
+			} else {
+				// The below is a hacky way to get pminfobox to work within PM. It defaults to Writing since AxeBot/The Scribe is always * in that room. For personal bots, this should be changed to any room that you can guarentee the bot has at least * permissions.
+				if (!(room instanceof Users.User) && Users.self.rooms.get(room) === '*') {
+					return this.pmHtml(user, boxpm);
+				} else {
+					return this.say(text + "Today's History of the Day is **" + database.hotd.title + "**:" + "__" + database.hotd.date + "__" + " - " + database.hotd.location) + database.hotd.description;
+				}
+			}
+		}
+		if (Tools.toId(target) === 'check' || Tools.toId(target) === 'time') {
+			if (!database.hotd) return this.say(text + "There is no History of the Day to check!");
+			return this.say(text + "The History of the Day was last updated to **" + database.hotd.title + "** " + Tools.toDurationString(Date.now() - database.hotd.time) + " ago by " + database.hotd.user);
+		}
+		let targets = target.split(', ');
+		let typo = false;
+		if (targets[0] === "typo") {
+			if (!database.hotd) return this.say(text + "There is no History of the Day to correct!");
+			if ((room instanceof Users.User || !user.hasRank(room, '%')) && user.name !== database.hotd.user) return this.say(text + "Sorry, you must be the original user or driver and above to make typo corrections.");
+			typo = true;
+			targets.shift();
+		}
+		if (database.hotd) {
+			if (!typo && Date.now() - database.hotd.time < 61200000) return this.say(text + "Sorry, but at least 17 hours must have passed since the WOTD was last set in order to set it again!");
+		}
+		let hasPerms = false;
+		if (database.scribeShop) {
+			if (typo || (!(room instanceof Users.User) && user.hasRank(room, '+'))) {
+				hasPerms = true;
+			} else {
+				for (let i = 0; i < database.scribeShop.length; i++) {
+					if (database.scribeShop[i].account === user.id) {
+						if (database.scribeShop[i].wotd !== 0) {
+							database.scribeShop[i].wotd -= 1;
+							hasPerms = true;
+							this.say("Redeeming your Poetic License... Uses remaining: " + database.scribeShop[i].wotd + "!");
+						}
+					}
+				}
+			}
+		} else if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
+			hasPerms = true;
+		}
+		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the History of the Day.');
+		if (targets.length < 4) return this.say(text + "Invalid arguments specified. The format is: __title__, __date__, __location__, __description__.");
+		let hotd = {
+			title: targets[0].trim(),
+			date: targets [1],
+			location: targets [2],
+			description: targets[3].trim(),
+		};
+		if (!typo) {
+			hotd.time = Date.now();
+			hotd.user = user.name;
+		} else {
+			hotd.time = database.hotd.time;
+			hotd.user = database.hotd.user;
+		}
+		if (!database.hotdHistory) {
+			database.hotdHistory = [];
+		}
+		database.hotd = hotd;
+		database.hotdHistory.push(hotd);
+		Storage.exportDatabase('writing');
+		this.say(text + "The History of the Day has been set to '" + targets[0] + "'!");
 	},
 	//Returns the link to the Writing Room's website.
 	site: 'website',
