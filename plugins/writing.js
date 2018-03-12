@@ -680,6 +680,71 @@ let commands = {
 			}
 		}
 	},
+	//Returns the Book of the Day! One of Writing's commands.
+	'book': 'botd',
+	botd: function (target, room, user) {
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
+		if (!target) {
+			if (!database.botd) return this.say(text + "No Book of the Day has been set.");
+			let tem = new Date(database.botd.time).toLocaleString('en-US', {hour: 'numeric', minute:'numeric', day:'2-digit', month:'long', hour12: true, timeZoneName: 'short'});
+			let box = '<div style="background:url(https://i.imgur.com/CTD30ie.png) center;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"> <span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:url(https://i.imgur.com/tKaXWwH.png?1);padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-book" aria-hidden="true"></i> Book of the Day <i class="fa fa-bookmark" aria-hidden="true"></i></span> <span style="font-size:30pt;display:block;">' + database.botd.book + '</span> <span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);">' + ' book by <strong style="letter-spacing:0;">' + database.botd.author + '</strong></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong>' + database.botd.summary + '</span><div style="width:100%;padding:2px 0;border:1px solid black;display:block;font-family:sans-serif;font-size:9.5pt;color:black;text-align:center;margin-top:15px;border-radius:2px;"> <span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ' + database.botd.user + ' on ' + tem + '</span> </div></div></div>';
+			let boxpm = '<div style="background:url(https://i.imgur.com/loMDPK2.jpg) center;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"> <span style="display:block;font-family:serif;font-size:14pt;font-style:oblique;background:#6688AA;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;">Word of the Day</span> <span style="font-size:20pt;display:block;">' + database.wotd.word + '</span> <span style="font-family:sans-serif;font-size:11pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:2px;">' + database.wotd.pron + ' / <strong style="letter-spacing:0;">' + database.wotd.kind + '</strong></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)">1.</strong>' + database.wotd.definition + '</span></div></div>';
+			if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
+				return this.sayHtml(box);
+			} else {
+				// The below is a hacky way to get pminfobox to work within PM. It defaults to Writing since AxeBot/The Scribe is always * in that room. For personal bots, this should be changed to any room that you can guarentee the bot has at least * permissions.
+				if (!(room instanceof Users.User) && Users.self.rooms.get(room) === '*') {
+					return this.pmHtml(user, boxpm);
+				} else {
+					return this.say(text + "Today's Word of the Day is **" + database.botd.book + "** " + database.botd.author+ " - " + database.botd.summary);
+				}
+			}
+		}
+		if (Tools.toId(target) === 'check' || Tools.toId(target) === 'time') {
+			if (!database.botd) return this.say(text + "There is no Book of the Day to check!");
+			return this.say(text + "The Word of the Day was last updated to **" + database.botd.book + "** " + Tools.toDurationString(Date.now() - database.botd.time) + " ago by " + database.botd.user);
+		}
+		let targets = target.split(', ');
+		let typo = false;
+		if (targets[0] === "typo") {
+			if (!database.botd) return this.say(text + "There is no Book of the Day to correct!");
+			if ((room instanceof Users.User || !user.hasRank(room, '%')) && user.name !== database.botd.user) return this.say(text + "Sorry, you must be the original user or driver and above to make typo corrections.");
+			typo = true;
+			targets.shift();
+		}
+		if (database.botd) {
+			if (!typo && Date.now() - database.botd.time < 61200000) return this.say(text + "Sorry, but at least 17 hours must have passed since the BOTD was last set in order to set it again!");
+		}
+		let hasPerms = false;
+		if (database.scribeShop) {
+			if (typo || (!(room instanceof Users.User) && user.hasRank(room, '+'))) {
+				hasPerms = true;
+			} 
+		} else if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
+			hasPerms = true;
+		}
+		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the Book of the Day.');
+		if (targets.length < 3) return this.say(text + "Invalid arguments specified. The format is: __book__, __author__, __summary__.");
+		let botd = {
+			book: targets[0].trim(),
+			author: targets[1],
+			summary: targets[2].trim(),
+		};
+		if (!typo) {
+			botd.time = Date.now();
+			botd.user = user.name;
+		} else {
+			botd.time = database.botd.time;
+			botd.user = database.botd.user;
+		}
+		if (!database.botdBook) {
+			database.botdBook = [];
+		}
+		database.botd = botd;
+		database.botdBook.push(botd);
+		Storage.exportDatabase('writing');
+		this.say(text + "The Book of the Day has been set to '" + targets[0] + "'!");
+	},
 	//Returns the Word of the Day! One of Writing's most-used commands.
 	'word': 'wotd',
 	wotd: function (target, room, user) {
