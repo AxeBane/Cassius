@@ -927,7 +927,7 @@ let commands = {
 				if (!(room instanceof Users.User) && Users.self.rooms.get(room) === '*') {
 					return this.pmHtml(user, boxpm);
 				} else {
-					return this.say(text + "Today's Word of the Day is **" + database.botd.book + "** " + database.botd.author+ " - " + database.botd.summary);
+					return this.say(text + "Today's Word of the Day is **" + database.botd.book + "** " + database.botd.author + " - " + database.botd.summary);
 				}
 			}
 		}
@@ -950,7 +950,7 @@ let commands = {
 		if (database.scribeShop) {
 			if (typo || (!(room instanceof Users.User) && user.hasRank(room, '+'))) {
 				hasPerms = true;
-			} 
+			}
 		} else if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
 			hasPerms = true;
 		}
