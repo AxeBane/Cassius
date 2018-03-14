@@ -2122,23 +2122,25 @@ let commands = {
 			} else {
 				this.say("There's nothing there to confirm. :v");
 			}
-		} else if (targets[0] === "addimage") {
+		}  else if (targets[0] === "addimage") {
 			if (room instanceof Users.User || !user.hasRank(room, '+')) return false;
+			let num = Tools.toId(targets[1]);
 			if (targets.length > 3) return this.say("Please only specify a myth index number and an image.");
 			if (targets.length < 3) return this.say("Please specify both a myth index number and an image.");
-			if (isNaN(Number(targets[1]))) return this.say("That was not an index number. Please use the number that's stated in the entry for the thing you're trying to edit.");
+			if (isNaN(Number(num))) return this.say("That was not an index number. Please use the number that's stated in the entry for the thing you're trying to edit.");
 			let pattern = /((http|https|ftp):\/\/)[^\s]/;
 			if (!pattern.test(targets[2])) {
 				return this.say("Please enter a valid URL.");
 			}
 			for (let i = 0; i < database.myths.db.length; i++) {
-				if (targets[1] === database.myths.db[i].id) {
-					database.myths.db[i].img = targets[2];
+				if (num >= database.myths.db.length) {
+					return this.say('Cannot find entry number ' + num);
+				} else {
+					database.myths.db[num].img = targets[2];
 					Storage.exportDatabase('writing');
-					return this.say("Done! Image added to " + database.myths.db[i].name + "!");
+					return this.say("Done! Image added to " + database.myths.db[num].name + "!");
 				}
 			}
-			return this.say("Entry not found. Are you sure you're using the right myth index number?");
 		} else if (targets[0] === "remove" || targets[0] === "delete") {
 			if (room instanceof Users.User || !user.hasRank(room, '%')) return false;
 			if (isNaN(Number(targets[1]))) return this.say("That was not an index number. Please use the number that's stated in the entry for the thing you're trying to edit.");
