@@ -684,6 +684,7 @@ let commands = {
 	'word': 'wotd',
 	wotd: function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
+		if (room.id !== 'writing') return this.say('Please only use this command in Writing.');
 		if (!target) {
 			if (!database.wotd) return this.say(text + "No Word of the Day has been set.");
 			let tem = new Date(database.wotd.time).toLocaleString('en-US', {hour: 'numeric', minute:'numeric', day:'2-digit', month:'long', hour12: true, timeZoneName: 'short'});
@@ -992,7 +993,7 @@ let commands = {
 			text += "If you're new to the Writing room, be sure to read our website: http://pswriting.weebly.com/";
 			break;
 		case 'canalavelibrary':
-			text += "Welcome to Myths & Magic! In this room, we, well... talk about mythology and magic! Though, discussion of black magic is not encouraged. Website: https://pscanalavelibrary.weebly.com/";
+			text += "Welcome to Canalave Library! In this room, we, well... talk about mythology and magic! Though, discussion of black magic is not encouraged. Website: https://pscanalavelibrary.weebly.com/";
 			break;
 		default:
 			text += "Welcome to the room!";
