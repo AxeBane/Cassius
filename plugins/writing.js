@@ -2135,27 +2135,24 @@ let commands = {
 			if (!pattern.test(targets[2])) {
 				return this.say("Please enter a valid URL.");
 			}
-			for (let i = 0; i < database.myths.db.length; i++) {
-				if (num >= database.myths.db.length) {
-					return this.say('Cannot find entry number ' + num);
-				} else {
-					database.myths.db[num].img = targets[2];
-					Storage.exportDatabase('writing');
-					return this.say("Done! Image added to " + database.myths.db[num].name + "!");
-				}
+			if (num >= database.myths.db.length) {
+				return this.say('Cannot find entry number ' + num);
+			} else {
+				database.myths.db[num].img = targets[2];
+				Storage.exportDatabase('writing');
+				return this.say("Done! Image added to " + database.myths.db[num].name + "!");
+			}
 			}
 		} else if (targets[0] === "remove" || targets[0] === "delete") {
 			if (room instanceof Users.User || !user.hasRank(room, '%')) return false;
 			let num = Tools.toId(targets[1]);
 			if (isNaN(Number(num))) return this.say("That was not an index number. Please use the number that's stated in the entry for the thing you're trying to edit.");
-			for (let i = 0; i < database.myths.db.length; i++) {
-				if (num >= database.myths.db.length) {
-					return this.say('Cannot find entry number ' + num);
-				} else {
-					database.myths.pendingDelete = Number(num);
-					Storage.exportDatabase('writing');
-					return this.say("Myth found under name '" + database.myths.db[num].name + "' and pantheon '" + database.myths.db[num].pan + "'. If this is correct, please use ``;myth confirm, delete``.");
-				}
+			if (num >= database.myths.db.length) {
+				return this.say('Cannot find entry number ' + num);
+			} else {
+				database.myths.pendingDelete = Number(num);
+				Storage.exportDatabase('writing');
+				return this.say("Myth found under name '" + database.myths.db[num].name + "' and pantheon '" + database.myths.db[num].pan + "'. If this is correct, please use ``;myth confirm, delete``.");
 			}
 		} else if (targets[0] === "view" || targets[0] === "show" || targets[0] === "see" || targets[0] === "search") {
 			if (targets.length < 2) return this.say("Error: Not enough arguments. Please use ``;myth help`` for usage instructions.");
