@@ -2142,7 +2142,6 @@ let commands = {
 				Storage.exportDatabase('writing');
 				return this.say("Done! Image added to " + database.myths.db[num].name + "!");
 			}
-			}
 		} else if (targets[0] === "remove" || targets[0] === "delete") {
 			if (room instanceof Users.User || !user.hasRank(room, '%')) return false;
 			let num = Tools.toId(targets[1]);
