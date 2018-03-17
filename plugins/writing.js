@@ -834,73 +834,6 @@ let commands = {
 		Storage.exportDatabase('writing');
 		this.say(text + "The Myth of the Week has been set to '" + targets[0] + "'!");
 	},
-	//Returns the Story of the Week! One of Writing's commands.
-	'story': 'sotw',
-	sotw: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		if (!target) {
-			if (!database.sotw) return this.say(text + "No Story of the Day has been set.");
-			let tem = new Date(database.sotw.time).toLocaleString('en-US', {hour: 'numeric', minute:'numeric', day:'2-digit', month:'long', hour12: true, timeZoneName: 'short'});
-			let box = '<div style="background:url(https://i.imgur.com/CTD30ie.png) center;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"> <span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:url(https://i.imgur.com/tKaXWwH.png?1);padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-book" aria-hidden="true"></i> Story of the week <i class="fa fa-bookmark" aria-hidden="true"></i></span> <span style="font-size:30pt;display:block;"><center>' + database.sotw.story + '</center></span> <span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);">' + 'Link: <style="letter-spacing:0;">' + database.sotw.link + '</span> <span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);">' + ' Genre: <strong style="letter-spacing:0;">' + database.sotw.genre + '</strong></span><span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);">' + ' Author: <strong style="letter-spacing:0;">' + database.sotw.author + '</strong></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong>' + database.sotw.summary + '</span><div style="width:100%;padding:2px 0;border:1px solid black;display:block;font-family:sans-serif;font-size:9.5pt;color:black;text-align:center;margin-top:15px;border-radius:2px;"> <span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ' + database.sotw.user + ' on ' + tem + '</span> </div></div></div>';
-			let boxpm = '<div style="background:url(https://i.imgur.com/CTD30ie.png) center;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"> <span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:url(https://i.imgur.com/tKaXWwH.png?1);padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-book" aria-hidden="true"></i> Story of the Day <i class="fa fa-bookmark" aria-hidden="true"></i></span> <span style="font-size:30pt;display:block;"><center>' + database.sotw.story + '</center></span> <span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);">' + ' Genre: <strong style="letter-spacing:0;">' + database.sotw.genre + '</strong></span><span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);">' + ' Author: <strong style="letter-spacing:0;">' + database.sotw.author + '</strong></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong>' + database.sotw.summary + '</span><div style="width:100%;padding:2px 0;border:1px solid black;display:block;font-family:sans-serif;font-size:9.5pt;color:black;text-align:center;margin-top:15px;border-radius:2px;"> <span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ' + database.sotw.user + ' on ' + tem + '</span> </div></div></div>';
-			if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
-				return this.sayHtml(box);
-			} else {
-				// The below is a hacky way to get pminfobox to work within PM. It defaults to Writing since AxeBot/The Scribe is always * in that room. For personal bots, this should be changed to any room that you can guarentee the bot has at least * permissions.
-				if (!(room instanceof Users.User) && Users.self.rooms.get(room) === '*') {
-					return this.pmHtml(user, boxpm);
-				} else {
-					return this.say(text + "Today's Story of the Day is **" + database.sotw.story + "** " + "by:" + database.sotw.author + " Link: " + database.sotw.link);
-				}
-			}
-		}
-		if (Tools.toId(target) === 'check' || Tools.toId(target) === 'time') {
-			if (!database.sotw) return this.say(text + "There is no Book of the Day to check!");
-			return this.say(text + "The Word of the Day was last updated to **" + database.sotw.story + "** " + Tools.toDurationString(Date.now() - database.sotw.time) + " ago by " + database.sotw.user);
-		}
-		let targets = target.split(', ');
-		let typo = false;
-		if (targets[0] === "typo") {
-			if (!database.sotw) return this.say(text + "There is no Book of the Day to correct!");
-			if ((room instanceof Users.User || !user.hasRank(room, '%')) && user.name !== database.sotw.user) return this.say(text + "Sorry, you must be the original user or driver and above to make typo corrections.");
-			typo = true;
-			targets.shift();
-		}
-		if (database.sotw) {
-			if (!typo && Date.now() - database.sotw.time < 432000000) return this.say(text + "Sorry, but at least 5 days must have passed since the SOTW was last set in order to set it again!");
-
-		let hasPerms = false;
-		if (database.scribeShop) {
-			if (typo || (!(room instanceof Users.User) && user.hasRank(room, '+'))) {
-				hasPerms = true;
-			}
-		} else if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
-			hasPerms = true;
-		}
-		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the Story of the Day.');
-		if (targets.length < 5) return this.say(text + "Invalid arguments specified. The format is: __story__, __link__, __genre, __author__, __summary__.");
-		let sotw = {
-			story: targets[0].trim(),
-			link: targets[1],
-			genre: targets[2],
-			author: targets[3],
-			summary: targets[4].trim(),
-		};
-		if (!typo) {
-			sotw.time = Date.now();
-			sotw.user = user.name;
-		} else {
-			sotw.time = database.sotw.time;
-			sotw.user = database.sotw.user;
-		}
-		if (!database.sotwStory) {
-			database.sotwStory = [];
-		}
-		database.sotw = sotw;
-		database.sotwStory.push(sotw);
-		Storage.exportDatabase('writing');
-		this.say(text + "The Story of the Week has been set to '" + targets[0] + "'!");
-	},
 	// Returns the history of the day for mythology room
 	'history': 'hotd',
 	hotd: function (target, room, user) {
@@ -977,6 +910,73 @@ let commands = {
 		database.hotdHistory.push(hotd);
 		Storage.exportDatabase('writing');
 		this.say(text + "The History of the Day has been set to '" + targets[0] + "'!");
+	},
+	//Returns the Story of the Week! One of Writing's commands.
+	'story': 'sotw',
+	sotw: function (target, room, user) {
+		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
+		if (!target) {
+			if (!database.sotw) return this.say(text + "No Story of the Day has been set.");
+			let tem = new Date(database.sotw.time).toLocaleString('en-US', {hour: 'numeric', minute:'numeric', day:'2-digit', month:'long', hour12: true, timeZoneName: 'short'});
+			let box = '<div style="background:url(https://i.imgur.com/CTD30ie.png) center;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"> <span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:url(https://i.imgur.com/tKaXWwH.png?1);padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-book" aria-hidden="true"></i> Story of the week <i class="fa fa-bookmark" aria-hidden="true"></i></span> <span style="font-size:30pt;display:block;"><center>' + database.sotw.story + '</center></span> <span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);">' + 'Link: <style="letter-spacing:0;">' + database.sotw.link + '</span> <span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);">' + ' Genre: <strong style="letter-spacing:0;">' + database.sotw.genre + '</strong></span><span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);">' + ' Author: <strong style="letter-spacing:0;">' + database.sotw.author + '</strong></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong>' + database.sotw.summary + '</span><div style="width:100%;padding:2px 0;border:1px solid black;display:block;font-family:sans-serif;font-size:9.5pt;color:black;text-align:center;margin-top:15px;border-radius:2px;"> <span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ' + database.sotw.user + ' on ' + tem + '</span> </div></div></div>';
+			let boxpm = '<div style="background:url(https://i.imgur.com/CTD30ie.png) center;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"> <span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:url(https://i.imgur.com/tKaXWwH.png?1);padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-book" aria-hidden="true"></i> Story of the Day <i class="fa fa-bookmark" aria-hidden="true"></i></span> <span style="font-size:30pt;display:block;"><center>' + database.sotw.story + '</center></span> <span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);">' + ' Genre: <strong style="letter-spacing:0;">' + database.sotw.genre + '</strong></span><span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);">' + ' Author: <strong style="letter-spacing:0;">' + database.sotw.author + '</strong></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong>' + database.sotw.summary + '</span><div style="width:100%;padding:2px 0;border:1px solid black;display:block;font-family:sans-serif;font-size:9.5pt;color:black;text-align:center;margin-top:15px;border-radius:2px;"> <span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ' + database.sotw.user + ' on ' + tem + '</span> </div></div></div>';
+			if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
+				return this.sayHtml(box);
+			} else {
+				// The below is a hacky way to get pminfobox to work within PM. It defaults to Writing since AxeBot/The Scribe is always * in that room. For personal bots, this should be changed to any room that you can guarentee the bot has at least * permissions.
+				if (!(room instanceof Users.User) && Users.self.rooms.get(room) === '*') {
+					return this.pmHtml(user, boxpm);
+				} else {
+					return this.say(text + "Today's Story of the Day is **" + database.sotw.story + "** " + "by:" + database.sotw.author + " Link: " + database.sotw.link);
+				}
+			}
+		}
+		if (Tools.toId(target) === 'check' || Tools.toId(target) === 'time') {
+			if (!database.sotw) return this.say(text + "There is no Book of the Day to check!");
+			return this.say(text + "The Word of the Day was last updated to **" + database.sotw.story + "** " + Tools.toDurationString(Date.now() - database.sotw.time) + " ago by " + database.sotw.user);
+		}
+		let targets = target.split(', ');
+		let typo = false;
+		if (targets[0] === "typo") {
+			if (!database.sotw) return this.say(text + "There is no Book of the Day to correct!");
+			if ((room instanceof Users.User || !user.hasRank(room, '%')) && user.name !== database.sotw.user) return this.say(text + "Sorry, you must be the original user or driver and above to make typo corrections.");
+			typo = true;
+			targets.shift();
+		}
+		if (database.sotw) {
+			if (!typo && Date.now() - database.sotw.time < 432000000) return this.say(text + "Sorry, but at least 5 days must have passed since the SOTW was last set in order to set it again!");
+
+		let hasPerms = false;
+		if (database.scribeShop) {
+			if (typo || (!(room instanceof Users.User) && user.hasRank(room, '+'))) {
+				hasPerms = true;
+			}
+		} else if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
+			hasPerms = true;
+		}
+		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the Story of the Day.');
+		if (targets.length < 5) return this.say(text + "Invalid arguments specified. The format is: __story__, __link__, __genre, __author__, __summary__.");
+		let sotw = {
+			story: targets[0].trim(),
+			link: targets[1],
+			genre: targets[2],
+			author: targets[3],
+			summary: targets[4].trim(),
+		};
+		if (!typo) {
+			sotw.time = Date.now();
+			sotw.user = user.name;
+		} else {
+			sotw.time = database.sotw.time;
+			sotw.user = database.sotw.user;
+		}
+		if (!database.sotwStory) {
+			database.sotwStory = [];
+		}
+		database.sotw = sotw;
+		database.sotwStory.push(sotw);
+		Storage.exportDatabase('writing');
+		this.say(text + "The Story of the Week has been set to '" + targets[0] + "'!");
 	},
 	//Returns the link to the Writing Room's website.
 	site: 'website',
