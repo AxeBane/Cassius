@@ -911,7 +911,6 @@ let commands = {
 		Storage.exportDatabase('writing');
 		this.say(text + "The History of the Day has been set to '" + targets[0] + "'!");
 	},
-	//Returns the Story of the Week! One of Writing's commands.
 	'story': 'sotw',
 	sotw: function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
@@ -945,13 +944,13 @@ let commands = {
 		}
 		if (database.sotw) {
 			if (!typo && Date.now() - database.sotw.time < 432000000) return this.say(text + "Sorry, but at least 5 days must have passed since the SOTW was last set in order to set it again!");
-
+	}
 		let hasPerms = false;
 		if (database.scribeShop) {
 			if (typo || (!(room instanceof Users.User) && user.hasRank(room, '+'))) {
 				hasPerms = true;
-			}
-		} else if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
+	}
+		} else  if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
 			hasPerms = true;
 		}
 		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the Story of the Day.');
