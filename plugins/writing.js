@@ -992,7 +992,7 @@ let commands = {
 			text += "If you're new to the Writing room, be sure to read our website: http://pswriting.weebly.com/";
 			break;
 		case 'canalavelibrary':
-			text += "Welcome to Myths & Magic! In this room, we, well... talk about mythology and magic! Though, discussion of black magic is not encouraged. Website: https://pscanalavelibrary.weebly.com/";
+			text += "Welcome to the Canalave Library! In this room we discuss mythology, history, legends, and more! Website: https://pscanalavelibrary.weebly.com/";
 			break;
 		default:
 			text += "Welcome to the room!";
