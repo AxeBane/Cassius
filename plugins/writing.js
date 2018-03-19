@@ -795,11 +795,7 @@ let commands = {
 		if (database.motw) {
 			if (!typo && Date.now() - database.motw.time < 432000000) return this.say(text + "Sorry, but at least 5 days must have passed since the MOTW was last set in order to set it again!");
 		}
-		let hasPerms = false;
-		if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
-			hasPerms = true;
-		}
-		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the Myth of the Week.');
+		if (!user.hasRank(room, '+')) return this.say(text + 'You must be at least Voice or higher to set the Myth of the Week.');
 		if (targets.length < 3) return this.say(text + "Invalid arguments specified. The format is: __motw__, __description__, __image link__.");
 		let motw = {
 			myth: targets[0].trim(),
@@ -857,11 +853,7 @@ let commands = {
 		if (database.hotd) {
 			if (!typo && Date.now() - database.hotd.time < 61200000) return this.say(text + "Sorry, but at least 17 hours must have passed since the WOTD was last set in order to set it again!");
 		}
-		let hasPerms = false;
-		if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
-			hasPerms = true;
-		}
-		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the History of the Day.');
+		if (!user.hasRank(room, '+')) return this.say(text + 'You must be at least Voice or higher to set the History of the Day.');
 		if (targets.length < 4) return this.say(text + "Invalid arguments specified. The format is: __title__, __date__, __location__, __description__.");
 		let hotd = {
 			title: targets[0].trim(),
