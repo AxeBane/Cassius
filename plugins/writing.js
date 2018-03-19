@@ -796,21 +796,7 @@ let commands = {
 			if (!typo && Date.now() - database.motw.time < 432000000) return this.say(text + "Sorry, but at least 5 days must have passed since the MOTW was last set in order to set it again!");
 		}
 		let hasPerms = false;
-		if (database.scribeShop) {
-			if (typo || (!(room instanceof Users.User) && user.hasRank(room, '+'))) {
-				hasPerms = true;
-			} else {
-				for (let i = 0; i < database.scribeShop.length; i++) {
-					if (database.scribeShop[i].account === user.id) {
-						if (database.scribeShop[i].motw !== 0) {
-							database.scribeShop[i].motw -= 1;
-							hasPerms = true;
-							this.say("Redeeming your Poetic License... Uses remaining: " + database.scribeShop[i].motw + "!");
-						}
-					}
-				}
-			}
-		} else if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
+		if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
 			hasPerms = true;
 		}
 		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the Myth of the Week.');
@@ -872,21 +858,7 @@ let commands = {
 			if (!typo && Date.now() - database.hotd.time < 61200000) return this.say(text + "Sorry, but at least 17 hours must have passed since the WOTD was last set in order to set it again!");
 		}
 		let hasPerms = false;
-		if (database.scribeShop) {
-			if (typo || (!(room instanceof Users.User) && user.hasRank(room, '+'))) {
-				hasPerms = true;
-			} else {
-				for (let i = 0; i < database.scribeShop.length; i++) {
-					if (database.scribeShop[i].account === user.id) {
-						if (database.scribeShop[i].wotd !== 0) {
-							database.scribeShop[i].wotd -= 1;
-							hasPerms = true;
-							this.say("Redeeming your Poetic License... Uses remaining: " + database.scribeShop[i].wotd + "!");
-						}
-					}
-				}
-			}
-		} else if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
+		if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
 			hasPerms = true;
 		}
 		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the History of the Day.');
