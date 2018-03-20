@@ -684,7 +684,7 @@ let commands = {
 	'word': 'wotd',
 	wotd: function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		if (room.id !== 'writing') return this.say('Please only use this command in Writing.');
+		if (!(room instanceof Users.User && room.id === 'writing')) return this.say('Please only use this command in Writing.');
 		if (!target) {
 			if (!database.wotd) return this.say(text + "No Word of the Day has been set.");
 			let tem = new Date(database.wotd.time).toLocaleString('en-US', {hour: 'numeric', minute:'numeric', day:'2-digit', month:'long', hour12: true, timeZoneName: 'short'});
