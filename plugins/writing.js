@@ -761,7 +761,7 @@ let commands = {
 	'mythoftheweek': 'motw',
 	motw: function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		if (room.id !== 'canalavelibrary') return this.pm(user, 'Please use this command in Canalave Library only.');
+		if (!(room instanceof Users.User && room.id === 'canalavelibrary')) return this.pm(user, 'Please use this command in Canalave Library only.');
 		if (!target) {
 			if (!database.motw) return this.say(text + "No Myth of the Week has been set.");
 			let tem = new Date(database.motw.time).toLocaleString('en-US', {hour: 'numeric', minute:'numeric', day:'2-digit', month:'long', hour12: true, timeZoneName: 'short'});
@@ -795,7 +795,7 @@ let commands = {
 		if (database.motw) {
 			if (!typo && Date.now() - database.motw.time < 432000000) return this.say(text + "Sorry, but at least 5 days must have passed since the MOTW was last set in order to set it again!");
 		}
-		if (!user.hasRank(room, '+')) return this.say(text + 'You must be at least Voice or higher to set the Myth of the Week.');
+		if (!(room instanceof Users.User)) return this.say(text + 'You must be at least Voice or higher to set the Myth of the Week.');
 		if (targets.length < 3) return this.say(text + "Invalid arguments specified. The format is: __motw__, __description__, __image link__.");
 		let motw = {
 			myth: targets[0].trim(),
@@ -821,7 +821,7 @@ let commands = {
 	'history': 'hotd',
 	hotd: function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		if (room.id !== 'canalavelibrary') return this.pm(user, 'Please use this command in Canalave Library only.');
+		if (!(room instanceof Users.User && room.id === 'canalavelibrary')) return this.pm(user, 'Please use this command in Canalave Library only.');
 		if (!target) {
 			if (!database.hotd) return this.say(text + "No History of the Day has been set.");
 			let tem = new Date(database.hotd.time).toLocaleString('en-US', {hour: 'numeric', minute:'numeric', day:'2-digit', month:'long', hour12: true, timeZoneName: 'short'});
@@ -842,7 +842,7 @@ let commands = {
 			if (!database.hotd) return this.say(text + "There is no History of the Day to check!");
 			return this.say(text + "The History of the Day was last updated to **" + database.hotd.title + "** " + Tools.toDurationString(Date.now() - database.hotd.time) + " ago by " + database.hotd.user);
 		}
-		let targets = target.split(', ');
+		let targets = target.split(',');
 		let typo = false;
 		if (targets[0] === "typo") {
 			if (!database.hotd) return this.say(text + "There is no History of the Day to correct!");
@@ -853,12 +853,12 @@ let commands = {
 		if (database.hotd) {
 			if (!typo && Date.now() - database.hotd.time < 61200000) return this.say(text + "Sorry, but at least 17 hours must have passed since the WOTD was last set in order to set it again!");
 		}
-		if (!user.hasRank(room, '+')) return this.say(text + 'You must be at least Voice or higher to set the History of the Day.');
+		if (!(room instanceof Users.User)) return this.say(text + 'You must be at least Voice or higher to set the History of the Day.');
 		if (targets.length < 4) return this.say(text + "Invalid arguments specified. The format is: __title__, __date__, __location__, __description__.");
 		let hotd = {
 			title: targets[0].trim(),
-			date: targets [1],
-			location: targets [2],
+			date: targets[1],
+			location: targets[2],
 			description: targets[3].trim(),
 		};
 		if (!typo) {
