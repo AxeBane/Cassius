@@ -1002,11 +1002,6 @@ let commands = {
 		text += " Feel free to ask the room staff any questions that you may have!";
 		this.say(text);
 	},
-	//For when you need a little love.
-	esupport: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '%') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + 'I love you, ' + user.name + '.');
-	},
 	//Returns the link for the room's Google Drive.
 	drive: function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
