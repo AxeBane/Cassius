@@ -802,60 +802,44 @@ let commands = {
 				}
 			}
 		}
-		if (Tools.toId(target) === 'check' || Tools.toId(target) === 'time') {
-			if (!database.motw) return this.say(text + "There is no Myth of the Week to check!");
-			return this.say(text + "The Myth of the Week was last updated to **" + database.motw.myth + "** " + Tools.toDurationString(Date.now() - database.motw.time) + " ago by " + database.motw.user);
-		}
-		let targets = target.split(',');
-		let typo = false;
-		if (targets[0] === "typo") {
-			if (!database.motw) return this.say(text + "There is no Myth of the Week to correct!");
-			if ((room instanceof Users.User || !user.hasRank(room, '%')) && user.name !== database.motw.user) return this.say(text + "Sorry, you must be the original user or driver and above to make typo corrections.");
-			typo = true;
-			targets.shift();
-		}
-		if (database.motw) {
-			if (!typo && Date.now() - database.motw.time < 432000000) return this.say(text + "Sorry, but at least 5 days must have passed since the MOTW was last set in order to set it again!");
-		}
+
 		let hasPerms = false;
 		if (database.scribeShop) {
-			if (typo || (!(room instanceof Users.User) && user.hasRank(room, '+'))) {
-				hasPerms = true;
-			} else {
-				for (let i = 0; i < database.scribeShop.length; i++) {
-					if (database.scribeShop[i].account === user.id) {
-						if (database.scribeShop[i].motw !== 0) {
-							database.scribeShop[i].motw -= 1;
-							hasPerms = true;
-							this.say("Redeeming your Poetic License... Uses remaining: " + database.scribeShop[i].motw + "!");
-						}
+			for (let i = 0; i < database.scribeShop.length; i++) {
+				if (database.scribeShop[i].account === user.id) {
+					if (database.scribeShop[i].motw !== 0) {
+						database.scribeShop[i].motw -= 1;
+						hasPerms = true;
+						this.say("Redeeming your Poetic License... Uses remaining: " + database.scribeShop[i].motw + "!");
 					}
 				}
 			}
-		} else if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
+		} 
+		if (!hasPerms && !(room instanceof Users.User) && user.hasRank(room, '+')) {
 			hasPerms = true;
 		}
 		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the Myth of the Week.');
-		if (targets.length < 3) return this.say(text + "Invalid arguments specified. The format is: __motw__, __description__, __image link__.");
+		
+		let [myth, image, ...rest] = target.split(',');
+		
+		if (!myth || !image || !rest.length) return this.say(text + "Invalid arguments specified. The format is: __motw__, __image link__, __description__.");
+		
+		myth = myth.trim();
+		image = image.trim();
+		const desc = rest.join(',').trim();
+		
 		let motw = {
-			myth: targets[0].trim(),
-			desc: targets[1],
-			image: targets[2],
+			myth: myth,
+			image: image,
+			desc: desc,
 		};
-		if (!typo) {
-			motw.time = Date.now();
-			motw.user = user.name;
-		} else {
-			motw.time = database.motw.time;
-			motw.user = database.motw.user;
-		}
 		if (!database.motwHistory) {
 			database.motwHistory = [];
 		}
 		database.motw = motw;
 		database.motwHistory.push(motw);
 		Storage.exportDatabase('writing');
-		this.say(text + "The Myth of the Week has been set to '" + targets[0] + "'!");
+		this.say(`${text}The Myth of the Week has been set to ${myth}!`);
 	},
 	// Returns the history of the day for mythology room
 	'history': 'hotd',
