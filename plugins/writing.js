@@ -758,22 +758,45 @@ let commands = {
 	},
 	// Returns the Myth of the day for Canalave library room!
 	'mythoftheweek': 'motw',
-	motw: function (target, room, user) {
+	motw: async function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		if (room.id !== 'canalavelibrary') return this.pm(user, 'Please use this command in Canalave Library only.');
 		if (!target) {
 			if (!database.motw) return this.say(text + "No Myth of the Week has been set.");
-			let tem = new Date(database.motw.time).toLocaleString('en-US', {hour: 'numeric', minute:'numeric', day:'2-digit', month:'long', hour12: true, timeZoneName: 'short'});
-			let box200 = `<div style="background-image: url(${database.motw.image}); background-size: contain; background-position: center; background-color: transparent; height: 80x; background-repeat: no-repeat"></div>`;
-			let box250 = `<div style="background-image: url(${database.motw.image}); background-size: contain; background-position: center; background-color: transparent; height: 120px; background-repeat: no-repeat"></div>`;
-			let pmHtml = `<div style="background-image:url(https://i.imgur.com/tKaXWwH.png?1);margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:5px;text-align:justify;"><span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background-image:url(https://i.imgur.com/3NS4KeC.png);padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-fire" aria-hidden="true"></i> Myth of the Week <i class="fa fa-fire" aria-hidden="true"></i></span> <center>${box250}<span style="font-size:25pt;display:block;">${database.motw.myth} </span><div style="font-size:19px">${database.motw.desc}</div></center><span style="font-family:sans-serif;font-size:10pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:0px;"></span><span style="font-size:5pt;font-family:sans-serif;margin-top:0px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong></span><div style="width:100%;padding:2px 0;border:1px solid #6688AA;display:block;font-family:sans-serif;font-size:9.5pt;text-align:center;margin-top:0px;border-radius:2px;"><span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ${database.motw.user} ${tem}</span> </div></div></div>`;
-			let chatHtml = `<div style="background-image:url(https://i.imgur.com/tKaXWwH.png?1);margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:5px;text-align:justify;"><span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background-image:url(https://i.imgur.com/3NS4KeC.png);padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-fire" aria-hidden="true"></i> Myth of the Week <i class="fa fa-fire" aria-hidden="true"></i></span> <center>${box250}<span style="font-size:25pt;display:block;">${database.motw.myth} </span><div style="font-size:19px">${database.motw.desc}</div></center><span style="font-family:sans-serif;font-size:10pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:0px;"></span><span style="font-size:5pt;font-family:sans-serif;margin-top:0px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong></span><div style="width:100%;padding:2px 0;border:1px solid #6688AA;display:block;font-family:sans-serif;font-size:9.5pt;text-align:center;margin-top:0px;border-radius:2px;"><span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ${database.motw.user} ${tem}</span> </div></div></div>`;
+			let dimensions = await require('../image.js').fit(database.motw.image, 120, 180).catch(() => {});
+
+			let imgHTML = '';
+
+			if (dimensions) {
+				const [width, height] = dimensions;
+				imgHTML = `<td>
+					<img src="${database.motw.image}" width=${width} height=${height}>
+				</td>`;
+			}
+
+			const html = `<div style="background: url(&quot;https://i.imgur.com/EQh19sO.png&quot;) center ; margin: -2px -4px ; box-shadow: inset 0 0 50px rgba(0 , 0 , 0 , 0.15);">
+				<div style="font-family: Georgia, serif ; max-width: 550px ; margin: auto ; padding: 8px 8px 12px 8px; text-align: left; background: rgba(250, 250, 250, 0.8)">
+					<span style="display: block ; font-family: Verdana, Geneva, sans-serif ; font-size: 16pt ; font-weight: bold ; background: #6d6d6d ; padding: 3px 0 ; text-align: center ; border-radius: 2px ; color: rgba(255 , 255 , 255 , 1) ; margin-bottom: 2px">
+						<i class="fa fa-fire"></i> Myth of the Week <i class="fa fa-fire"></i>
+					</span>
+					<table style="padding-top: 5px;">
+						<tr>
+							${imgHTML}
+							<td style="padding-left:8px; vertical-align:baseline;">
+								<div style="font-size: 22pt ; margin-top: 5px; color: black;">${database.motw.myth}</div>
+								<div style="font-size: 10pt; font-family: Verdana, Geneva, sans-serif; margin-top: 5px ; display: block ; color: rgba(0, 0, 0 , 0.8)">${database.motw.desc}</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>`;
+
 			if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
-				return this.sayHtml(chatHtml);
+				return this.sayHtml(html);
 			} else {
 				// The below is a hacky way to get pminfobox to work within PM. It defaults to Writing since AxeBot/The Scribe is always * in that room. For personal bots, this should be changed to any room that you can guarentee the bot has at least * permissions.
 				if (!(room instanceof Users.User) && Users.self.rooms.get(room) === '*') {
-					return this.pmHtml(user, pmHtml);
+					return this.pmHtml(user, html);
 				} else {
 					return this.say(text + "Today's Myth of the Week is **" + database.motw.myth + "**: " + database.motw.desc + ' | ' + database.motw.image);
 				}
