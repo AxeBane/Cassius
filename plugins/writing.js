@@ -758,49 +758,49 @@ let commands = {
 	},
 	// Returns the Myth of the day for Canalave library room!
 	'mythoftheweek': 'motw',
-	motw: async function (target, room, user) {
+	motw: function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
 		if (room.id !== 'canalavelibrary') return this.pm(user, 'Please use this command in Canalave Library only.');
 		if (!target) {
 			if (!database.motw) return this.say(text + "No Myth of the Week has been set.");
-			let dimensions = await require('../image.js').fit(database.motw.image, 120, 180).catch(() => {});
+			return require('../image.js').fit(database.motw.image, 120, 180).then(dimensions => {
+				let imgHTML = '';
 
-			let imgHTML = '';
-
-			if (dimensions) {
-				const [width, height] = dimensions;
-				imgHTML = `<td>
-					<img src="${database.motw.image}" width=${width} height=${height}>
-				</td>`;
-			}
-
-			const html = `<div style="background: url(&quot;https://i.imgur.com/EQh19sO.png&quot;) center ; margin: -2px -4px ; box-shadow: inset 0 0 50px rgba(0 , 0 , 0 , 0.15);">
-				<div style="font-family: Georgia, serif ; max-width: 550px ; margin: auto ; padding: 8px 8px 12px 8px; text-align: left; background: rgba(250, 250, 250, 0.8)">
-					<span style="display: block ; font-family: Verdana, Geneva, sans-serif ; font-size: 16pt ; font-weight: bold ; background: #6d6d6d ; padding: 3px 0 ; text-align: center ; border-radius: 2px ; color: rgba(255 , 255 , 255 , 1) ; margin-bottom: 2px">
-						<i class="fa fa-fire"></i> Myth of the Week <i class="fa fa-fire"></i>
-					</span>
-					<table style="padding-top: 5px;">
-						<tr>
-							${imgHTML}
-							<td style="padding-left:8px; vertical-align:baseline;">
-								<div style="font-size: 22pt ; margin-top: 5px; color: black;">${database.motw.myth}</div>
-								<div style="font-size: 10pt; font-family: Verdana, Geneva, sans-serif; margin-top: 5px ; display: block ; color: rgba(0, 0, 0 , 0.8)">${database.motw.desc}</div>
-							</td>
-						</tr>
-					</table>
-				</div>
-			</div>`;
-
-			if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
-				return this.sayHtml(html);
-			} else {
-				// The below is a hacky way to get pminfobox to work within PM. It defaults to Writing since AxeBot/The Scribe is always * in that room. For personal bots, this should be changed to any room that you can guarentee the bot has at least * permissions.
-				if (!(room instanceof Users.User) && Users.self.rooms.get(room) === '*') {
-					return this.pmHtml(user, html);
-				} else {
-					return this.say(text + "Today's Myth of the Week is **" + database.motw.myth + "**: " + database.motw.desc + ' | ' + database.motw.image);
+				if (dimensions) {
+					const [width, height] = dimensions;
+					imgHTML = `<td>
+						<img src="${database.motw.image}" width=${width} height=${height}>
+					</td>`;
 				}
-			}
+
+				const html = `<div style="background: url(&quot;https://i.imgur.com/EQh19sO.png&quot;) center ; margin: -2px -4px ; box-shadow: inset 0 0 50px rgba(0 , 0 , 0 , 0.15);">
+					<div style="font-family: Georgia, serif ; max-width: 550px ; margin: auto ; padding: 8px 8px 12px 8px; text-align: left; background: rgba(250, 250, 250, 0.8)">
+						<span style="display: block ; font-family: Verdana, Geneva, sans-serif ; font-size: 16pt ; font-weight: bold ; background: #6d6d6d ; padding: 3px 0 ; text-align: center ; border-radius: 2px ; color: rgba(255 , 255 , 255 , 1) ; margin-bottom: 2px">
+							<i class="fa fa-fire"></i> Myth of the Week <i class="fa fa-fire"></i>
+						</span>
+						<table style="padding-top: 5px;">
+							<tr>
+								${imgHTML}
+								<td style="padding-left:8px; vertical-align:baseline;">
+									<div style="font-size: 22pt ; margin-top: 5px; color: black;">${database.motw.myth}</div>
+									<div style="font-size: 10pt; font-family: Verdana, Geneva, sans-serif; margin-top: 5px ; display: block ; color: rgba(0, 0, 0 , 0.8)">${database.motw.desc}</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>`;
+
+				if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
+					return this.sayHtml(html);
+				} else {
+					// The below is a hacky way to get pminfobox to work within PM. It defaults to Writing since AxeBot/The Scribe is always * in that room. For personal bots, this should be changed to any room that you can guarentee the bot has at least * permissions.
+					if (!(room instanceof Users.User) && Users.self.rooms.get(room) === '*') {
+						return this.pmHtml(user, html);
+					} else {
+						return this.say(text + "Today's Myth of the Week is **" + database.motw.myth + "**: " + database.motw.desc + ' | ' + database.motw.image);
+					}
+				}
+			});
 		}
 
 		let hasPerms = false;
@@ -814,20 +814,21 @@ let commands = {
 					}
 				}
 			}
-		} 
+		}
+
 		if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
 			hasPerms = true;
 		}
 		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the Myth of the Week.');
-		
+
 		let [myth, image, ...rest] = target.split(',');
-		
+
 		if (!myth || !image || !rest.length) return this.say(text + "Invalid arguments specified. The format is: __motw__, __image link__, __description__.");
-		
+
 		myth = myth.trim();
 		image = image.trim();
 		const desc = rest.join(',').trim();
-		
+
 		let motw = {
 			myth: myth,
 			image: image,
@@ -848,7 +849,7 @@ let commands = {
 		if (room.id !== 'canalavelibrary') return this.pm(user, 'Please use this command in Canalave Library only.');
 		if (!target) {
 			if (!database.hotd) return this.say(text + "No History of the Day has been set.");
-			
+
 			const html = `<div style="background: url(&quot;https://i.imgur.com/EQh19sO.png&quot;) center ; margin: -2px -4px ; box-shadow: inset 0 0 50px rgba(0 , 0 , 0 , 0.15);">
 				<div style="font-family: Georgia, serif ; max-width: 550px ; margin: auto ; padding: 8px 8px 12px 8px; text-align: left; background: rgba(250, 250, 250, 0.8)">
 					<span style="display: block ; font-family: Verdana, Geneva, sans-serif ; font-size: 16pt ; font-weight: bold ; background: #6d6d6d ; padding: 3px 0 ; text-align: center ; border-radius: 2px ; color: rgba(255 , 255 , 255 , 1) ; margin-bottom: 2px">
@@ -891,14 +892,14 @@ let commands = {
 		}
 		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the History of the Day.');
 		let [title, date, location, ...rest] = target.split(',');
-		
+
 		if (!title || !date || !location || !rest.length) return this.say(text + "Invalid arguments specified. The format is: __title__, __date__, __location__, __description__.");
-		
+
 		title = title.trim();
 		date = date.trim();
 		location = location.trim();
 		const desc = rest.join(',').trim();
-		
+
 		let hotd = {
 			title: title,
 			date: date,
