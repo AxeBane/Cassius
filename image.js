@@ -7,7 +7,7 @@ const probe = require('probe-image-size');
  */
 function fitImage(url, maxHeight = 300, maxWidth = 400) {
 	return new Promise((resolve, reject) => {
-		probe(url).then(dimensions => {
+		probe(url).then(/**@type {any} */ dimensions => {
 			let {height, width} = dimensions;
 			let ratio = 1;
 
