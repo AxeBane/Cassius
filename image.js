@@ -1,5 +1,6 @@
 'use strict';
 
+// @ts-ignore
 const probe = require('probe-image-size');
 
 /**
