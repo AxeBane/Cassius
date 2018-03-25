@@ -12,7 +12,7 @@ function fitImage(url, maxHeight = 300, maxWidth = 400) {
 			let {height, width} = dimensions;
 			let ratio = 1;
 
-			if (width <= maxWidth && height <= maxHeight) return [width, height];
+			if (width <= maxWidth && height <= maxHeight) return resolve([width, height]);
 
 			if (height * (maxWidth / maxHeight) > width) {
 				ratio = maxHeight / height;
@@ -20,7 +20,7 @@ function fitImage(url, maxHeight = 300, maxWidth = 400) {
 				ratio = maxWidth / width;
 			}
 
-			return [Math.round(width * ratio), Math.round(height * ratio)];
+			return resolve([Math.round(width * ratio), Math.round(height * ratio)]);
 		},
 		() => resolve(false));
 	});
