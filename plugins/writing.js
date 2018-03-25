@@ -768,26 +768,26 @@ let commands = {
 
 				if (dimensions) {
 					const [width, height] = dimensions;
-					imgHTML = `<td>
-						<img src="${database.motw.image}" width=${width} height=${height}>
+					imgHTML = `<td>\
+						<img src="${database.motw.image}" width=${width} height=${height}>\
 					</td>`;
 				}
 
-				const html = `<div style="background: url(&quot;https://i.imgur.com/EQh19sO.png&quot;) center ; margin: -2px -4px ; box-shadow: inset 0 0 50px rgba(0 , 0 , 0 , 0.15);">
-					<div style="font-family: Georgia, serif ; max-width: 550px ; margin: auto ; padding: 8px 8px 12px 8px; text-align: left; background: rgba(250, 250, 250, 0.8)">
-						<span style="display: block ; font-family: Verdana, Geneva, sans-serif ; font-size: 16pt ; font-weight: bold ; background: #6d6d6d ; padding: 3px 0 ; text-align: center ; border-radius: 2px ; color: rgba(255 , 255 , 255 , 1) ; margin-bottom: 2px">
-							<i class="fa fa-fire"></i> Myth of the Week <i class="fa fa-fire"></i>
-						</span>
-						<table style="padding-top: 5px;">
-							<tr>
-								${imgHTML}
-								<td style="padding-left:8px; vertical-align:baseline;">
-									<div style="font-size: 22pt ; margin-top: 5px; color: black;">${database.motw.myth}</div>
-									<div style="font-size: 10pt; font-family: Verdana, Geneva, sans-serif; margin-top: 5px ; display: block ; color: rgba(0, 0, 0 , 0.8)">${database.motw.desc}</div>
-								</td>
-							</tr>
-						</table>
-					</div>
+				const html = `<div style="background: url(&quot;https://i.imgur.com/EQh19sO.png&quot;) center ; margin: -2px -4px ; box-shadow: inset 0 0 50px rgba(0 , 0 , 0 , 0.15);">\
+					<div style="font-family: Georgia, serif ; max-width: 550px ; margin: auto ; padding: 8px 8px 12px 8px; text-align: left; background: rgba(250, 250, 250, 0.8)">\
+						<span style="display: block ; font-family: Verdana, Geneva, sans-serif ; font-size: 16pt ; font-weight: bold ; background: #6d6d6d ; padding: 3px 0 ; text-align: center ; border-radius: 2px ; color: rgba(255 , 255 , 255 , 1) ; margin-bottom: 2px">\
+							<i class="fa fa-fire"></i> Myth of the Week <i class="fa fa-fire"></i>\
+						</span>\
+						<table style="padding-top: 5px;">\
+							<tr>\
+								${imgHTML}\
+								<td style="padding-left:8px; vertical-align:baseline;">\
+									<div style="font-size: 22pt ; margin-top: 5px; color: black;">${database.motw.myth}</div>\
+									<div style="font-size: 10pt; font-family: Verdana, Geneva, sans-serif; margin-top: 5px ; display: block ; color: rgba(0, 0, 0 , 0.8)">${database.motw.desc}</div>\
+								</td>\
+							</tr>\
+						</table>\
+					</div>\
 				</div>`;
 
 				if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
@@ -850,19 +850,19 @@ let commands = {
 		if (!target) {
 			if (!database.hotd) return this.say(text + "No History of the Day has been set.");
 
-			const html = `<div style="background: url(&quot;https://i.imgur.com/EQh19sO.png&quot;) center ; margin: -2px -4px ; box-shadow: inset 0 0 50px rgba(0 , 0 , 0 , 0.15);">
-				<div style="font-family: Georgia, serif ; max-width: 550px ; margin: auto ; padding: 8px 8px 12px 8px; text-align: left; background: rgba(250, 250, 250, 0.8)">
-					<span style="display: block ; font-family: Verdana, Geneva, sans-serif ; font-size: 16pt ; font-weight: bold ; background: #6d6d6d ; padding: 3px 0 ; text-align: center ; border-radius: 2px ; color: rgba(255 , 255 , 255 , 1) ; margin-bottom: 2px">
-						<i class="fa fa-book"></i> History of the Day <i class="fa fa-university"></i>
-					</span>
-					<span style="font-size: 22pt ; display: inline-block; color: black">${database.hotd.title}</span>
-					<span style="font-family: Verdana, Geneva, sans-serif ; font-size: 12pt ; display: block ; color: rgba(0, 0, 0 , 0.7) ; letter-spacing: 0px">
-					${database.hotd.date} - <strong style="letter-spacing: 0">${database.hotd.location}</strong>
-					</span>
-					<span style="font-size: 10pt ; font-family: Verdana, Geneva, sans-serif; margin-top: 5px ; display: block ; color: rgba(0, 0, 0 , 0.8)">
-						${database.hotd.description}
-					</span>
-				</div>
+			const html = `<div style="background: url(&quot;https://i.imgur.com/EQh19sO.png&quot;) center ; margin: -2px -4px ; box-shadow: inset 0 0 50px rgba(0 , 0 , 0 , 0.15);">\
+				<div style="font-family: Georgia, serif ; max-width: 550px ; margin: auto ; padding: 8px 8px 12px 8px; text-align: left; background: rgba(250, 250, 250, 0.8)">\
+					<span style="display: block ; font-family: Verdana, Geneva, sans-serif ; font-size: 16pt ; font-weight: bold ; background: #6d6d6d ; padding: 3px 0 ; text-align: center ; border-radius: 2px ; color: rgba(255 , 255 , 255 , 1) ; margin-bottom: 2px">\
+						<i class="fa fa-book"></i> History of the Day <i class="fa fa-university"></i>\
+					</span>\
+					<span style="font-size: 22pt ; display: inline-block; color: black">${database.hotd.title}</span>\
+					<span style="font-family: Verdana, Geneva, sans-serif ; font-size: 12pt ; display: block ; color: rgba(0, 0, 0 , 0.7) ; letter-spacing: 0px">\
+					${database.hotd.date} - <strong style="letter-spacing: 0">${database.hotd.location}</strong>\
+					</span>\
+					<span style="font-size: 10pt ; font-family: Verdana, Geneva, sans-serif; margin-top: 5px ; display: block ; color: rgba(0, 0, 0 , 0.8)">\
+						${database.hotd.description}\
+					</span>\
+				</div>\
 			</div>`;
 			if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
 				return this.sayHtml(html);
