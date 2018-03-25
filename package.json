@@ -16,6 +16,7 @@
 		"url": "https://github.com/sirDonovan/Cassius.git"
 	},
 	"dependencies": {
+		"probe-image-size": "^4.0.0",
 		"websocket": "^1.0.25"
 	},
 	"devDependencies": {
