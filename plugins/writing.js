@@ -688,7 +688,7 @@ let commands = {
 		if (!target) {
 			if (!database.wotd) return this.say(text + "No Word of the Day has been set.");
 			let tem = new Date(database.wotd.time).toLocaleString('en-US', {hour: 'numeric', minute:'numeric', day:'2-digit', month:'long', hour12: true, timeZoneName: 'short'});
-			let box = '<div style="background:url(https://i.imgur.com/loMDPK2.jpg) center;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"> <span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:#6688AA;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-book" aria-hidden="true"></i> Word of the Day <i class="fa fa-pencil" aria-hidden="true"></i></span> <span style="font-size:30pt;display:block;">' + database.wotd.word + '</span> <span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:2px;">' + database.wotd.pron + ' / <strong style="letter-spacing:0;">' + database.wotd.kind + '</strong></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)">1.</strong>' + database.wotd.definition + '</span><div style="width:100%;padding:2px 0;border:1px solid #6688AA;display:block;font-family:sans-serif;font-size:9.5pt;color:#6688AA;text-align:center;margin-top:15px;border-radius:2px;"> <span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ' + database.wotd.user + ' on ' + tem + '</span> </div></div></div>';
+			let box = '<div style="background:url(https://i.imgur.com/loMDPK2.jpg) center;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"> <span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:#6688AA;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-envelope" aria-hidden="true"></i> Word of the Day <i class="fa fa-pencil" aria-hidden="true"></i></span> <span style="font-size:30pt;display:block;">' + database.wotd.word + '</span> <span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:2px;">' + database.wotd.pron + ' / <strong style="letter-spacing:0;">' + database.wotd.kind + '</strong></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)">1.</strong>' + database.wotd.definition + '</span><div style="width:100%;padding:2px 0;border:1px solid #6688AA;display:block;font-family:sans-serif;font-size:9.5pt;color:#6688AA;text-align:center;margin-top:15px;border-radius:2px;"> <span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ' + database.wotd.user + ' on ' + tem + '</span> </div></div></div>';
 			let boxpm = '<div style="background:url(https://i.imgur.com/loMDPK2.jpg) center;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"> <span style="display:block;font-family:serif;font-size:14pt;font-style:oblique;background:#6688AA;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;">Word of the Day</span> <span style="font-size:20pt;display:block;">' + database.wotd.word + '</span> <span style="font-family:sans-serif;font-size:11pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:2px;">' + database.wotd.pron + ' / <strong style="letter-spacing:0;">' + database.wotd.kind + '</strong></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)">1.</strong>' + database.wotd.definition + '</span></div></div>';
 			if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
 				return this.sayHtml(box);
@@ -764,57 +764,28 @@ let commands = {
 		if (!(room instanceof Users.User && room.id === 'canalavelibrary')) return this.pm(user, 'Please use this command in Canalave Library only.');
 		if (!target) {
 			if (!database.motw) return this.say(text + "No Myth of the Week has been set.");
-			let tem = new Date(database.motw.time).toLocaleString('en-US', {hour: 'numeric', minute:'numeric', day:'2-digit', month:'long', hour12: true, timeZoneName: 'short'});
-			let box200 = `<div style="background-image: url(${database.motw.image}); background-size: contain; background-position: center; background-color: transparent; height: 80x; background-repeat: no-repeat"></div>`;
-			let box250 = `<div style="background-image: url(${database.motw.image}); background-size: contain; background-position: center; background-color: transparent; height: 120px; background-repeat: no-repeat"></div>`;
-			let pmHtml = `<div style="background-image:url(https://i.imgur.com/tKaXWwH.png?1);margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:5px;text-align:justify;"><span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background-image:url(https://i.imgur.com/3NS4KeC.png);padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-fire" aria-hidden="true"></i> Myth of the Week <i class="fa fa-fire" aria-hidden="true"></i></span> <center>${box200}<span style="font-size:25pt;display:block;">${database.motw.myth} </span><div style="font-size:19px">${database.motw.desc}</div></center><span style="font-family:sans-serif;font-size:10pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:0px;"></span><span style="font-size:5pt;font-family:sans-serif;margin-top:0px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong></span><div style="width:100%;padding:2px 0;border:1px solid #6688AA;display:block;font-family:sans-serif;font-size:9.5pt;text-align:center;margin-top:0px;border-radius:2px;"><span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ${database.motw.user} ${tem}</span> </div></div></div>`;
-			let chatHtml = `<div style="background-image:url(https://i.imgur.com/tKaXWwH.png?1);margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:5px;text-align:justify;"><span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background-image:url(https://i.imgur.com/3NS4KeC.png);padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-fire" aria-hidden="true"></i> Myth of the Week <i class="fa fa-fire" aria-hidden="true"></i></span> <center>${box250}<span style="font-size:25pt;display:block;">${database.motw.myth} </span><div style="font-size:19px">${database.motw.desc}</div></center><span style="font-family:sans-serif;font-size:10pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:0px;"></span><span style="font-size:5pt;font-family:sans-serif;margin-top:0px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong></span><div style="width:100%;padding:2px 0;border:1px solid #6688AA;display:block;font-family:sans-serif;font-size:9.5pt;text-align:center;margin-top:0px;border-radius:2px;"><span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ${database.motw.user} ${tem}</span> </div></div></div>`;
-			if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
-				return this.sayHtml(chatHtml);
-			} else {
-				// The below is a hacky way to get pminfobox to work within PM. It defaults to Writing since AxeBot/The Scribe is always * in that room. For personal bots, this should be changed to any room that you can guarentee the bot has at least * permissions.
-				if (!(room instanceof Users.User) && Users.self.rooms.get(room) === '*') {
-					return this.pmHtml(user, pmHtml);
 				} else {
-					return this.say(text + "Today's Myth of the Week is **" + database.motw.myth + "**: " + database.motw.desc + ' | ' + database.motw.image);
+					// The below is a hacky way to get pminfobox to work within PM. It defaults to Writing since AxeBot/The Scribe is always * in that room. For personal bots, this should be changed to any room that you can guarentee the bot has at least * permissions.
+					if (!(room instanceof Users.User) && Users.self.rooms.get(room) === '*') {
+						return this.pmHtml(user, html);
+					} else {
+						return this.say(text + "Today's Myth of the Week is **" + database.motw.myth + "**: " + database.motw.desc + ' | ' + database.motw.image);
+					}
 				}
-			}
+			});
 		}
-		if (Tools.toId(target) === 'check' || Tools.toId(target) === 'time') {
-			if (!database.motw) return this.say(text + "There is no Myth of the Week to check!");
-			return this.say(text + "The Myth of the Week was last updated to **" + database.motw.myth + "** " + Tools.toDurationString(Date.now() - database.motw.time) + " ago by " + database.motw.user);
-		}
-		let targets = target.split(',');
-		let typo = false;
-		if (targets[0] === "typo") {
-			if (!database.motw) return this.say(text + "There is no Myth of the Week to correct!");
-			if ((room instanceof Users.User || !user.hasRank(room, '%')) && user.name !== database.motw.user) return this.say(text + "Sorry, you must be the original user or driver and above to make typo corrections.");
-			typo = true;
-			targets.shift();
-		}
-		if (database.motw) {
-			if (!typo && Date.now() - database.motw.time < 432000000) return this.say(text + "Sorry, but at least 5 days must have passed since the MOTW was last set in order to set it again!");
-		}
-		if (targets.length < 3) return this.say(text + "Invalid arguments specified. The format is: __motw__, __description__, __image link__.");
 		let motw = {
-			myth: targets[0].trim(),
-			desc: targets[1],
-			image: targets[2],
+			myth: myth,
+			image: image,
+			desc: desc,
 		};
-		if (!typo) {
-			motw.time = Date.now();
-			motw.user = user.name;
-		} else {
-			motw.time = database.motw.time;
-			motw.user = database.motw.user;
-		}
 		if (!database.motwHistory) {
 			database.motwHistory = [];
 		}
 		database.motw = motw;
 		database.motwHistory.push(motw);
 		Storage.exportDatabase('writing');
-		this.say(text + "The Myth of the Week has been set to '" + targets[0] + "'!");
+		this.say(`${text}The Myth of the Week has been set to '${myth}'!`);
 	},
 	// Returns the history of the day for mythology room
 	'history': 'hotd',
@@ -823,63 +794,40 @@ let commands = {
 		if (!(room instanceof Users.User && room.id === 'canalavelibrary')) return this.pm(user, 'Please use this command in Canalave Library only.');
 		if (!target) {
 			if (!database.hotd) return this.say(text + "No History of the Day has been set.");
-			let tem = new Date(database.hotd.time).toLocaleString('en-US', {hour: 'numeric', minute:'numeric', day:'2-digit', month:'long', hour12: true, timeZoneName: 'short'});
-			let box = '<div style="background:url(https://i.imgur.com/EQh19sO.png) center;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"> <span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:#6d6d6d;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-tree" aria-hidden="true"></i> History of the Day <i class="fa fa-university" aria-hidden="true"></i></span> <span style="font-size:30pt;display:block;">' + database.hotd.title + '</span> <span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:0px;">' + database.hotd.date + ' - <strong style="letter-spacing:0;">' + database.hotd.location + '</strong></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong>' + database.hotd.description + '</span><div style="width:100%;padding:2px 0;border:1px solid #fff;display:block;font-family:sans-serif;font-size:9.5pt;color:#fff;text-align:center;margin-top:15px;border-radius:2px;"> <span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ' + database.hotd.user + ' on ' + tem + '</span></div></div></div>';
-			let boxpm = '<div style="background:url(https://i.imgur.com/EQh19sO.png) center;margin:-2px -4px;box-shadow:inset 0 0 50px rgba(0,0,0,0.15)"> <div style="font-family:serif;max-width:500px;margin:auto;padding:15px;text-align:justify;"> <span style="display:block;font-family:serif;font-size:18pt;font-style:oblique;background:#6d6d6d;padding:5px 0;text-align:center;border-radius:2px;color:rgba(255,255,255,1);margin-bottom:2px;"><i class="fa fa-tree" aria-hidden="true"></i> History of the Day <i class="fa fa-university" aria-hidden="true"></i></span> <span style="font-size:30pt;display:block;">' + database.hotd.title + '</span> <span style="font-family:sans-serif;font-size:12pt;display:block;color:rgba(0,0,0,0.7);letter-spacing:0px;">' + database.hotd.date + ' - <strong style="letter-spacing:0;">' + database.hotd.location + '</strong></span><span style="font-size:10pt;font-family:sans-serif;margin-top:10px;display:block;color:rgba(0,0,0,0.8)"><strong style="font-family:serif;margin-right:10px;color:rgba(0,0,0,0.5)"></strong>' + database.hotd.description + '</span><div style="width:100%;padding:2px 0;border:1px solid #fff;display:block;font-family:sans-serif;font-size:9.5pt;color:#fff;text-align:center;margin-top:15px;border-radius:2px;"> <span><i class="fa fa-refresh" aria-hidden="true"></i> Set by ' + database.hotd.user + ' on ' + tem + '</span></div></div></div>';
+
+			const html = `<div style="background: url(&quot;https://i.imgur.com/EQh19sO.png&quot;) center ; margin: -2px -4px ; box-shadow: inset 0 0 50px rgba(0 , 0 , 0 , 0.15);">\
+				<div style="font-family: Georgia, serif ; max-width: 550px ; margin: auto ; padding: 8px 8px 12px 8px; text-align: left; background: rgba(250, 250, 250, 0.8)">\
+					<span style="display: block ; font-family: Verdana, Geneva, sans-serif ; font-size: 16pt ; font-weight: bold ; background: #6d6d6d ; padding: 3px 0 ; text-align: center ; border-radius: 2px ; color: rgba(255 , 255 , 255 , 1) ; margin-bottom: 2px">\
+						<i class="fa fa-book"></i> History of the Day <i class="fa fa-university"></i>\
+					</span>\
+					<span style="font-size: 22pt ; display: inline-block; color: black">${database.hotd.title}</span>\
+					<span style="font-family: Verdana, Geneva, sans-serif ; font-size: 12pt ; display: block ; color: rgba(0, 0, 0 , 0.7) ; letter-spacing: 0px">\
+					${database.hotd.date} - <strong style="letter-spacing: 0">${database.hotd.location}</strong>\
+					</span>\
+					<span style="font-size: 10pt ; font-family: Verdana, Geneva, sans-serif; margin-top: 5px ; display: block ; color: rgba(0, 0, 0 , 0.8)">\
+						${database.hotd.description}\
+					</span>\
+				</div>\
+			</div>`;
 			if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
-				return this.sayHtml(box);
+				return this.sayHtml(html);
 			} else {
 				// The below is a hacky way to get pminfobox to work within PM. It defaults to Writing since AxeBot/The Scribe is always * in that room. For personal bots, this should be changed to any room that you can guarentee the bot has at least * permissions.
 				if (!(room instanceof Users.User) && Users.self.rooms.get(room) === '*') {
-					return this.pmHtml(user, boxpm);
+					return this.pmHtml(user, html);
 				} else {
-					return this.say(text + "Today's History of the Day is **" + database.hotd.title + "**:" + "__" + database.hotd.date + "__" + " - " + database.hotd.location) + database.hotd.description;
+					return this.say(text + "Today's History of the Day is **" + database.hotd.title + "**:" + "__" + database.hotd.date + "__" + " - " + database.hotd.location + database.hotd.description);
 				}
 			}
 		}
-		if (Tools.toId(target) === 'check' || Tools.toId(target) === 'time') {
-			if (!database.hotd) return this.say(text + "There is no History of the Day to check!");
-			return this.say(text + "The History of the Day was last updated to **" + database.hotd.title + "** " + Tools.toDurationString(Date.now() - database.hotd.time) + " ago by " + database.hotd.user);
-		}
-		let targets = target.split(',');
-		let typo = false;
-		if (targets[0] === "typo") {
-			if (!database.hotd) return this.say(text + "There is no History of the Day to correct!");
-			if ((room instanceof Users.User || !user.hasRank(room, '%')) && user.name !== database.hotd.user) return this.say(text + "Sorry, you must be the original user or driver and above to make typo corrections.");
-			typo = true;
-			targets.shift();
-		}
-		if (database.hotd) {
-			if (!typo && Date.now() - database.hotd.time < 61200000) return this.say(text + "Sorry, but at least 17 hours must have passed since the WOTD was last set in order to set it again!");
-		}
-		if (targets.length < 4) return this.say(text + "Invalid arguments specified. The format is: __title__, __date__, __location__, __description__.");
-		let hotd = {
-			title: targets[0].trim(),
-			date: targets[1],
-			location: targets[2],
-			description: targets[3].trim(),
 		};
-		if (!typo) {
-			hotd.time = Date.now();
-			hotd.user = user.name;
-		} else {
-			hotd.time = database.hotd.time;
-			hotd.user = database.hotd.user;
-		}
 		if (!database.hotdHistory) {
 			database.hotdHistory = [];
 		}
 		database.hotd = hotd;
 		database.hotdHistory.push(hotd);
 		Storage.exportDatabase('writing');
-		this.say(text + "The History of the Day has been set to '" + targets[0] + "'!");
-	},
-	//Returns the link to the Writing Room's website.
-	site: 'website',
-	website: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		if (room.id === 'writing') return this.say(text + "Writing Room's Website: http://pswriting.weebly.com/");
-		if (room.id === 'canalavelibrary') return this.say(text + "Canalave Library Room's Website: https://pscanalavelibrary.weebly.com/");
+		this.say(`${text}The History of the Day has been set to '${title}'!`);
 	},
 	//Returns the current time of day! ...For the bot, that is.
 	time: function (target, room, user) {
@@ -944,78 +892,6 @@ let commands = {
 		}
 		let today = correct(hour) + ':' + minutes + ':' + seconds + ' ' + AMorPM + ', ' + mm + '/' + dd + '/' + year + ', the ' + ordinalDay + ' of the ' + season + ' month of ' + month + ', ' + year + '.';
 		return this.say(text + 'The current time is ' + today + ' (' + day + ', GMT' + timezoneString + ')');
-	},
-	//Quick and generic introduction. Usually better to answer questions perosonally, though.
-	newbie: 'rules',
-	faq: 'rules',
-	rules: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		switch (room.id) {
-		case 'writing':
-			text += "If you're new to the Writing room, be sure to read our website: http://pswriting.weebly.com/";
-			break;
-		case 'canalavelibrary':
-			text += "Welcome to Canalave Library! In this room, we, well... talk about mythology and magic! Though, discussion of black magic is not encouraged. Website: https://pscanalavelibrary.weebly.com/";
-			break;
-		default:
-			text += "Welcome to the room!";
-		}
-		text += " Feel free to ask the room staff any questions that you may have!";
-		this.say(text);
-	},
-	//For when you need a little love.
-	esupport: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '%') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + 'I love you, ' + user.name + '.');
-	},
-	//Returns the link for the room's Google Drive.
-	drive: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + 'Community Drive: http://bit.do/ps-writing-archive');
-	},
-	//Quick link to a list of games and activities
-	fun: 'games',
-	activities: 'games',
-	games: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + 'Visit this page for a list of our various games and activities: http://pswriting.weebly.com/games.html');
-	},
-	//Sunday scribing hype. :o
-	//NOTE: Probably needs updating.
-	hype: 'sundayscribing',
-	slam: 'sundayscribing',
-	sundayslam: 'sundayscribing',
-	scribing: 'sundayscribing',
-	sundayscribing: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + "Every week we hold a Sunday Scribing challenge in which participants are to write a story or a poem (depending on the week) based on the topic announced on Sunday. They have until the following Friday to submit it. For more info and the submission link: http://goo.gl/Ezik4q");
-	},
-	//Returns a link to a Google Form where one can request for a new folder.
-	reqfolder: 'folderreq',
-	folderreq: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + 'Need a folder for our Google Drive Writing Archive? Submit a request here: http://bit.do/ps-folderreq');
-	},
-	//Returns a handy tool for capitalising things.
-	titlehelp: 'title',
-	title: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + 'Need help capitalising a title? Try out this helpful tool! http://titlecapitalization.com/');
-	},
-	//Returns a link to the Writing Room's poems list.
-	poems: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + 'Writing Room Poems: http://bit.do/PSwritingpoems');
-	},
-	//Returns a link to the Writing Room's stories list.
-	stories: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + 'Writing Room Stories: http://bit.do/PSwritingstories');
-	},
-	//Returns a brief guide to becoming voice.
-	voice: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + 'Interested in becoming a voice? Check out the guideines for your chance at having a shot! http://bit.do/pswritingvoicerules or http://bit.do/pswritingvoicerap');
 	},
 	//Starts timed announcements.
 	//NOTE: Broken? Hard to tell.
