@@ -2028,7 +2028,7 @@ let commands = {
 			return this.say("To confirm addition of ``" + input.name + "`` under pantheon ``" + input.pan + "``, type ``;myth confirm, add``.");
 		} else if (targets[0] === "confirm") {
 			if (room instanceof Users.User || !user.hasRank(room, '%')) return false;
-			targets[1] = targets[1].trim()
+			targets[1] = targets[1].trim();
 			if (!targets[1]) return this.say("Please specify afterwards whether or not you want to ``add`` or ``delete`` something.");
 			if (targets[1] === "add" && database.myths.pending !== null) {
 				database.myths.pending.id = database.myths.lastID + 1;
