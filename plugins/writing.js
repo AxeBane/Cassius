@@ -2037,7 +2037,7 @@ let commands = {
 				this.say("Addition confirmed! Thank you, " + database.myths.pending.user + "!");
 				database.myths.pending = null;
 				Storage.exportDatabase('writing');
-			} else if (targets[1] === "delete" && database.myths.pendingDelete !== -1) {
+		} else if (targets[1] === "delete" && database.myths.pendingDelete !== -1) {
 				database.myths.db.splice(database.myths.pendingDelete, 1);
 				for (let i = database.myths.pendingDelete; i < database.myths.db.length; i++) {
 					database.myths.db[i].id = i;
@@ -2065,7 +2065,7 @@ let commands = {
 				database.myths.db[num].img = targets[2];
 				Storage.exportDatabase('writing');
 				return this.say("Done! Image added to " + database.myths.db[num].name + "!");
- 			}
+			}
 		} else if (targets[0] === "remove" || targets[0] === "delete") {
 			if (room instanceof Users.User || !user.hasRank(room, '%')) return false;
 			let num = Tools.toId(targets[1]);
