@@ -843,6 +843,7 @@ let commands = {
 		database.motw = motw;
 		database.motwHistory.push(motw);
 		Storage.exportDatabase('writing');
+		this.say(`/modnote The Myth of the Week was set to '${myth}' by ${user.name}.`);
 		this.say(`${text}The Myth of the Week has been set to '${myth}'!`);
 	},
 	// Returns the history of the day for mythology room
@@ -918,6 +919,7 @@ let commands = {
 		database.hotd = hotd;
 		database.hotdHistory.push(hotd);
 		Storage.exportDatabase('writing');
+		this.say(`/modnote The History of the Day was set to '${title}' by ${user.name}.`);
 		this.say(`${text}The History of the Day has been set to '${title}'!`);
 	},
 	//Returns the current time of day! ...For the bot, that is.
