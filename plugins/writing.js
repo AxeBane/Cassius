@@ -684,6 +684,7 @@ let commands = {
 	'word': 'wotd',
 	wotd: function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
+		if (!(room instanceof Users.User && room.id === 'writing')) return this.say('Please only use this command in Writing.');
 		if (!target) {
 			if (!database.wotd) return this.say(text + "No Word of the Day has been set.");
 			let tem = new Date(database.wotd.time).toLocaleString('en-US', {hour: 'numeric', minute:'numeric', day:'2-digit', month:'long', hour12: true, timeZoneName: 'short'});
@@ -760,38 +761,9 @@ let commands = {
 	'mythoftheweek': 'motw',
 	motw: function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		if (room.id !== 'canalavelibrary') return this.pm(user, 'Please use this command in Canalave Library only.');
+		if (!(room instanceof Users.User && room.id === 'canalavelibrary')) return this.pm(user, 'Please use this command in Canalave Library only.');
 		if (!target) {
 			if (!database.motw) return this.say(text + "No Myth of the Week has been set.");
-			return require('../image.js').fit(database.motw.image, 120, 180).then(dimensions => {
-				let imgHTML = '';
-
-				if (dimensions) {
-					const [width, height] = dimensions;
-					imgHTML = `<td>\
-						<img src="${database.motw.image}" width=${width} height=${height}>\
-					</td>`;
-				}
-
-				const html = `<div style="background: url(&quot;https://i.imgur.com/EQh19sO.png&quot;) center ; margin: -2px -4px ; box-shadow: inset 0 0 50px rgba(0 , 0 , 0 , 0.15);">\
-					<div style="font-family: Georgia, serif ; max-width: 550px ; margin: auto ; padding: 8px 8px 12px 8px; text-align: left; background: rgba(250, 250, 250, 0.8)">\
-						<span style="display: block ; font-family: Verdana, Geneva, sans-serif ; font-size: 16pt ; font-weight: bold ; background: #6d6d6d ; padding: 3px 0 ; text-align: center ; border-radius: 2px ; color: rgba(255 , 255 , 255 , 1) ; margin-bottom: 2px">\
-							<i class="fa fa-fire"></i> Myth of the Week <i class="fa fa-fire"></i>\
-						</span>\
-						<table style="padding-top: 5px;">\
-							<tr>\
-								${imgHTML}\
-								<td style="padding-left:8px; vertical-align:baseline;">\
-									<div style="font-size: 22pt ; margin-top: 5px; color: black;">${database.motw.myth}</div>\
-									<div style="font-size: 10pt; font-family: Verdana, Geneva, sans-serif; margin-top: 5px ; display: block ; color: rgba(0, 0, 0 , 0.8)">${database.motw.desc}</div>\
-								</td>\
-							</tr>\
-						</table>\
-					</div>\
-				</div>`;
-
-				if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
-					return this.sayHtml(html);
 				} else {
 					// The below is a hacky way to get pminfobox to work within PM. It defaults to Writing since AxeBot/The Scribe is always * in that room. For personal bots, this should be changed to any room that you can guarentee the bot has at least * permissions.
 					if (!(room instanceof Users.User) && Users.self.rooms.get(room) === '*') {
@@ -802,33 +774,6 @@ let commands = {
 				}
 			});
 		}
-
-		let hasPerms = false;
-		if (database.scribeShop) {
-			for (let i = 0; i < database.scribeShop.length; i++) {
-				if (database.scribeShop[i].account === user.id) {
-					if (database.scribeShop[i].motw !== 0) {
-						database.scribeShop[i].motw -= 1;
-						hasPerms = true;
-						this.say("Redeeming your Poetic License... Uses remaining: " + database.scribeShop[i].motw + "!");
-					}
-				}
-			}
-		}
-
-		if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
-			hasPerms = true;
-		}
-		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the Myth of the Week.');
-
-		let [myth, image, ...rest] = target.split(',');
-
-		if (!myth || !image || !rest.length) return this.say(text + "Invalid arguments specified. The format is: __motw__, __image link__, __description__.");
-
-		myth = myth.trim();
-		image = image.trim();
-		const desc = rest.join(',').trim();
-
 		let motw = {
 			myth: myth,
 			image: image,
@@ -846,7 +791,7 @@ let commands = {
 	'history': 'hotd',
 	hotd: function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		if (room.id !== 'canalavelibrary') return this.pm(user, 'Please use this command in Canalave Library only.');
+		if (!(room instanceof Users.User && room.id === 'canalavelibrary')) return this.pm(user, 'Please use this command in Canalave Library only.');
 		if (!target) {
 			if (!database.hotd) return this.say(text + "No History of the Day has been set.");
 
@@ -875,36 +820,6 @@ let commands = {
 				}
 			}
 		}
-		let hasPerms = false;
-		if (database.scribeShop) {
-			for (let i = 0; i < database.scribeShop.length; i++) {
-				if (database.scribeShop[i].account === user.id) {
-					if (database.scribeShop[i].wotd !== 0) {
-						database.scribeShop[i].wotd -= 1;
-						hasPerms = true;
-						this.say("Redeeming your Poetic License... Uses remaining: " + database.scribeShop[i].wotd + "!");
-					}
-				}
-			}
-		}
-		if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
-			hasPerms = true;
-		}
-		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the History of the Day.');
-		let [title, date, location, ...rest] = target.split(',');
-
-		if (!title || !date || !location || !rest.length) return this.say(text + "Invalid arguments specified. The format is: __title__, __date__, __location__, __description__.");
-
-		title = title.trim();
-		date = date.trim();
-		location = location.trim();
-		const desc = rest.join(',').trim();
-
-		let hotd = {
-			title: title,
-			date: date,
-			location: location,
-			description: desc,
 		};
 		if (!database.hotdHistory) {
 			database.hotdHistory = [];
@@ -2000,7 +1915,8 @@ let commands = {
 	db: 'myth',
 	myth: function (target, room, user) {
 		if (!target) return this.say("Error: Not enough arguments. Please use ``;myth help`` for usage instructions.");
-		let targets = target.split(', ');
+		let targets = target.split(',');
+		targets[0] = targets[0].trim();
 		if (targets[0] === "add") {
 			if (room instanceof Users.User || !user.hasRank(room, '+')) return false;
 			if (targets.length - 1 < 3) return this.say("Error: Not enough arguments. Please use ``;myth help`` for usage instructions.");
@@ -2026,6 +1942,7 @@ let commands = {
 			return this.say("To confirm addition of ``" + input.name + "`` under pantheon ``" + input.pan + "``, type ``;myth confirm, add``.");
 		} else if (targets[0] === "confirm") {
 			if (room instanceof Users.User || !user.hasRank(room, '%')) return false;
+			targets[1] = targets[1].trim();
 			if (!targets[1]) return this.say("Please specify afterwards whether or not you want to ``add`` or ``delete`` something.");
 			if (targets[1] === "add" && database.myths.pending !== null) {
 				database.myths.pending.id = database.myths.lastID + 1;
@@ -2048,32 +1965,32 @@ let commands = {
 			}
 		} else if (targets[0] === "addimage") {
 			if (room instanceof Users.User || !user.hasRank(room, '+')) return false;
+			let num = Tools.toId(targets[1]);
 			if (targets.length > 3) return this.say("Please only specify a myth index number and an image.");
 			if (targets.length < 3) return this.say("Please specify both a myth index number and an image.");
-			if (isNaN(Number(targets[1]))) return this.say("That was not an index number. Please use the number that's stated in the entry for the thing you're trying to edit.");
+			if (isNaN(Number(num))) return this.say("That was not an index number. Please use the number that's stated in the entry for the thing you're trying to edit.");
 			let pattern = /((http|https|ftp):\/\/)[^\s]/;
 			if (!pattern.test(targets[2])) {
 				return this.say("Please enter a valid URL.");
 			}
-			for (let i = 0; i < database.myths.db.length; i++) {
-				if (targets[1] === database.myths.db[i].id) {
-					database.myths.db[i].img = targets[2];
-					Storage.exportDatabase('writing');
-					return this.say("Done! Image added to " + database.myths.db[i].name + "!");
-				}
+			if (num >= database.myths.db.length) {
+				return this.say('Cannot find entry number ' + num);
+			} else {
+				database.myths.db[num].img = targets[2];
+				Storage.exportDatabase('writing');
+				return this.say("Done! Image added to " + database.myths.db[num].name + "!");
 			}
-			return this.say("Entry not found. Are you sure you're using the right myth index number?");
 		} else if (targets[0] === "remove" || targets[0] === "delete") {
 			if (room instanceof Users.User || !user.hasRank(room, '%')) return false;
-			if (isNaN(Number(targets[1]))) return this.say("That was not an index number. Please use the number that's stated in the entry for the thing you're trying to edit.");
-			for (let i = 0; i < database.myths.db.length; i++) {
-				if (database.myths.db[i].id === targets[1]) {
-					database.myths.pendingDelete = Number(targets[1]);
-					Storage.exportDatabase('writing');
-					return this.say("Myth found under name '" + database.myths.db[i].name + "' and pantheon '" + database.myths.db[i].pan + "'. If this is correct, please use ``;myth confirm, delete``.");
-				}
+			let num = Tools.toId(targets[1]);
+			if (isNaN(Number(num))) return this.say("That was not an index number. Please use the number that's stated in the entry for the thing you're trying to edit.");
+			if (num >= database.myths.db.length) {
+				return this.say('Cannot find entry number ' + num);
+			} else {
+				database.myths.pendingDelete = Number(num);
+				Storage.exportDatabase('writing');
+				return this.say("Myth found under name '" + database.myths.db[num].name + "' and pantheon '" + database.myths.db[num].pan + "'. If this is correct, please use ``;myth confirm, delete``.");
 			}
-			return this.say("Entry not found. Are you sure you're using the right myth index number?");
 		} else if (targets[0] === "view" || targets[0] === "show" || targets[0] === "see" || targets[0] === "search") {
 			if (targets.length < 2) return this.say("Error: Not enough arguments. Please use ``;myth help`` for usage instructions.");
 			if (targets.length > 2) return this.say("Error: Too many arguments. Please only search for one thing at a time. Thanks!");
