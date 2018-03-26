@@ -2037,6 +2037,7 @@ let commands = {
 				this.say("Addition confirmed! Thank you, " + database.myths.pending.user + "!");
 				database.myths.pending = null;
 				Storage.exportDatabase('writing');
+			}
 		} else if (targets[1] === "delete" && database.myths.pendingDelete !== -1) {
 			database.myths.db.splice(database.myths.pendingDelete, 1);
 			for (let i = database.myths.pendingDelete; i < database.myths.db.length; i++) {
@@ -2045,8 +2046,6 @@ let commands = {
 				database.myths.pendingDelete = -1;
 				Storage.exportDatabase('writing');
 				return this.say("Deletion confirmed! Entry no-longer exists.");
-			} else {
-				this.say("There's nothing there to confirm. :v");
 			}
 		} else if (targets[0] === "addimage") {
 			if (room instanceof Users.User || !user.hasRank(room, '+')) return false;
