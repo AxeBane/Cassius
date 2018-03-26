@@ -914,13 +914,6 @@ let commands = {
 		Storage.exportDatabase('writing');
 		this.say(`${text}The History of the Day has been set to '${title}'!`);
 	},
-	//Returns the link to the Writing Room's website.
-	site: 'website',
-	website: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		if (room.id === 'writing') return this.say(text + "Writing Room's Website: http://pswriting.weebly.com/");
-		if (room.id === 'canalavelibrary') return this.say(text + "Canalave Library Room's Website: https://pscanalavelibrary.weebly.com/");
-	},
 	//Returns the current time of day! ...For the bot, that is.
 	time: function (target, room, user) {
 		let text = (room instanceof Users.User || user.hasRank(room, '+')) ? '' : '/pm ' + user.name + ', ';
@@ -984,73 +977,6 @@ let commands = {
 		}
 		let today = correct(hour) + ':' + minutes + ':' + seconds + ' ' + AMorPM + ', ' + mm + '/' + dd + '/' + year + ', the ' + ordinalDay + ' of the ' + season + ' month of ' + month + ', ' + year + '.';
 		return this.say(text + 'The current time is ' + today + ' (' + day + ', GMT' + timezoneString + ')');
-	},
-	//Quick and generic introduction. Usually better to answer questions perosonally, though.
-	newbie: 'rules',
-	faq: 'rules',
-	rules: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		switch (room.id) {
-		case 'writing':
-			text += "If you're new to the Writing room, be sure to read our website: http://pswriting.weebly.com/";
-			break;
-		case 'canalavelibrary':
-			text += "Welcome to the Canalave Library! In this room we discuss mythology, history, legends, and more! Website: https://pscanalavelibrary.weebly.com/";
-			break;
-		default:
-			text += "Welcome to the room!";
-		}
-		text += " Feel free to ask the room staff any questions that you may have!";
-		this.say(text);
-	},
-	//Returns the link for the room's Google Drive.
-	drive: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + 'Community Drive: http://bit.do/ps-writing-archive');
-	},
-	//Quick link to a list of games and activities
-	fun: 'games',
-	activities: 'games',
-	games: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + 'Visit this page for a list of our various games and activities: http://pswriting.weebly.com/games.html');
-	},
-	//Sunday scribing hype. :o
-	//NOTE: Probably needs updating.
-	hype: 'sundayscribing',
-	slam: 'sundayscribing',
-	sundayslam: 'sundayscribing',
-	scribing: 'sundayscribing',
-	sundayscribing: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + "Every week we hold a Sunday Scribing challenge in which participants are to write a story or a poem (depending on the week) based on the topic announced on Sunday. They have until the following Friday to submit it. For more info and the submission link: http://goo.gl/Ezik4q");
-	},
-	//Returns a link to a Google Form where one can request for a new folder.
-	reqfolder: 'folderreq',
-	folderreq: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + 'Need a folder for our Google Drive Writing Archive? Submit a request here: http://bit.do/ps-folderreq');
-	},
-	//Returns a handy tool for capitalising things.
-	titlehelp: 'title',
-	title: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + 'Need help capitalising a title? Try out this helpful tool! http://titlecapitalization.com/');
-	},
-	//Returns a link to the Writing Room's poems list.
-	poems: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + 'Writing Room Poems: http://bit.do/PSwritingpoems');
-	},
-	//Returns a link to the Writing Room's stories list.
-	stories: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + 'Writing Room Stories: http://bit.do/PSwritingstories');
-	},
-	//Returns a brief guide to becoming voice.
-	voice: function (target, room, user) {
-		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		this.say(text + 'Interested in becoming a voice? Check out the guideines for your chance at having a shot! http://bit.do/pswritingvoicerules or http://bit.do/pswritingvoicerap');
 	},
 	//Starts timed announcements.
 	//NOTE: Broken? Hard to tell.
