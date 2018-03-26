@@ -829,6 +829,7 @@ let commands = {
 
 		myth = myth.trim();
 		image = image.trim();
+		if (!/^https?:\/\//.test(image)) image = `http://${image}`;
 		const desc = rest.join(',').trim();
 
 		let motw = {
