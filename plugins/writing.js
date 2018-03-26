@@ -684,6 +684,7 @@ let commands = {
 	'word': 'wotd',
 	wotd: function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
+		if (!(room instanceof Users.User && room.id === 'writing')) return this.pm(user, 'Please use this command in Canalave Library only.');
 		if (!target) {
 			if (!database.wotd) return this.say(text + "No Word of the Day has been set.");
 			let tem = new Date(database.wotd.time).toLocaleString('en-US', {hour: 'numeric', minute:'numeric', day:'2-digit', month:'long', hour12: true, timeZoneName: 'short'});
@@ -760,7 +761,7 @@ let commands = {
 	'mythoftheweek': 'motw',
 	motw: function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		if (room.id !== 'canalavelibrary') return this.pm(user, 'Please use this command in Canalave Library only.');
+		if (!(room instanceof Users.User && room.id === 'canalavelibrary')) return this.pm(user, 'Please use this command in Canalave Library only.');
 		if (!target) {
 			if (!database.motw) return this.say(text + "No Myth of the Week has been set.");
 			return require('../image.js').fit(database.motw.image, 120, 180).then(dimensions => {
@@ -846,7 +847,7 @@ let commands = {
 	'history': 'hotd',
 	hotd: function (target, room, user) {
 		let text = room instanceof Users.User || user.hasRank(room, '+') ? '' : '/pm ' + user.name + ', ';
-		if (room.id !== 'canalavelibrary') return this.pm(user, 'Please use this command in Canalave Library only.');
+		if (!(room instanceof Users.User && room.id === 'canalavelibrary')) return this.pm(user, 'Please use this command in Canalave Library only.');
 		if (!target) {
 			if (!database.hotd) return this.say(text + "No History of the Day has been set.");
 
@@ -2000,7 +2001,8 @@ let commands = {
 	db: 'myth',
 	myth: function (target, room, user) {
 		if (!target) return this.say("Error: Not enough arguments. Please use ``;myth help`` for usage instructions.");
-		let targets = target.split(', ');
+		let targets = target.split(',');
+		targets[0] = targets[0].trim();
 		if (targets[0] === "add") {
 			if (room instanceof Users.User || !user.hasRank(room, '+')) return false;
 			if (targets.length - 1 < 3) return this.say("Error: Not enough arguments. Please use ``;myth help`` for usage instructions.");
@@ -2026,6 +2028,7 @@ let commands = {
 			return this.say("To confirm addition of ``" + input.name + "`` under pantheon ``" + input.pan + "``, type ``;myth confirm, add``.");
 		} else if (targets[0] === "confirm") {
 			if (room instanceof Users.User || !user.hasRank(room, '%')) return false;
+			targets[1] = targets[1].trim()
 			if (!targets[1]) return this.say("Please specify afterwards whether or not you want to ``add`` or ``delete`` something.");
 			if (targets[1] === "add" && database.myths.pending !== null) {
 				database.myths.pending.id = database.myths.lastID + 1;
@@ -2048,32 +2051,32 @@ let commands = {
 			}
 		} else if (targets[0] === "addimage") {
 			if (room instanceof Users.User || !user.hasRank(room, '+')) return false;
+			let num = Tools.toId(targets[1]);
 			if (targets.length > 3) return this.say("Please only specify a myth index number and an image.");
 			if (targets.length < 3) return this.say("Please specify both a myth index number and an image.");
-			if (isNaN(Number(targets[1]))) return this.say("That was not an index number. Please use the number that's stated in the entry for the thing you're trying to edit.");
+			if (isNaN(Number(num))) return this.say("That was not an index number. Please use the number that's stated in the entry for the thing you're trying to edit.");
 			let pattern = /((http|https|ftp):\/\/)[^\s]/;
 			if (!pattern.test(targets[2])) {
 				return this.say("Please enter a valid URL.");
 			}
-			for (let i = 0; i < database.myths.db.length; i++) {
-				if (targets[1] === database.myths.db[i].id) {
-					database.myths.db[i].img = targets[2];
-					Storage.exportDatabase('writing');
-					return this.say("Done! Image added to " + database.myths.db[i].name + "!");
-				}
-			}
-			return this.say("Entry not found. Are you sure you're using the right myth index number?");
+			if (num >= database.myths.db.length) {
+				return this.say('Cannot find entry number ' + num);
+			} else {
+				database.myths.db[num].img = targets[2];
+				Storage.exportDatabase('writing');
+				return this.say("Done! Image added to " + database.myths.db[num].name + "!");
+ 			}
 		} else if (targets[0] === "remove" || targets[0] === "delete") {
 			if (room instanceof Users.User || !user.hasRank(room, '%')) return false;
-			if (isNaN(Number(targets[1]))) return this.say("That was not an index number. Please use the number that's stated in the entry for the thing you're trying to edit.");
-			for (let i = 0; i < database.myths.db.length; i++) {
-				if (database.myths.db[i].id === targets[1]) {
-					database.myths.pendingDelete = Number(targets[1]);
-					Storage.exportDatabase('writing');
-					return this.say("Myth found under name '" + database.myths.db[i].name + "' and pantheon '" + database.myths.db[i].pan + "'. If this is correct, please use ``;myth confirm, delete``.");
-				}
+			let num = Tools.toId(targets[1]);
+			if (isNaN(Number(num))) return this.say("That was not an index number. Please use the number that's stated in the entry for the thing you're trying to edit.");
+			if (num >= database.myths.db.length) {
+				return this.say('Cannot find entry number ' + num);
+			} else {
+				database.myths.pendingDelete = Number(num);
+				Storage.exportDatabase('writing');
+				return this.say("Myth found under name '" + database.myths.db[num].name + "' and pantheon '" + database.myths.db[num].pan + "'. If this is correct, please use ``;myth confirm, delete``.");
 			}
-			return this.say("Entry not found. Are you sure you're using the right myth index number?");
 		} else if (targets[0] === "view" || targets[0] === "show" || targets[0] === "see" || targets[0] === "search") {
 			if (targets.length < 2) return this.say("Error: Not enough arguments. Please use ``;myth help`` for usage instructions.");
 			if (targets.length > 2) return this.say("Error: Too many arguments. Please only search for one thing at a time. Thanks!");
