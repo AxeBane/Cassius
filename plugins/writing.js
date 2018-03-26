@@ -804,7 +804,12 @@ let commands = {
 		}
 
 		let hasPerms = false;
-		if (database.scribeShop) {
+
+		if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
+			hasPerms = true;
+		}
+
+		if (!hasPerms && database.scribeShop) {
 			for (let i = 0; i < database.scribeShop.length; i++) {
 				if (database.scribeShop[i].account === user.id) {
 					if (database.scribeShop[i].motw !== 0) {
@@ -816,9 +821,6 @@ let commands = {
 			}
 		}
 
-		if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
-			hasPerms = true;
-		}
 		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the Myth of the Week.');
 
 		let [myth, image, ...rest] = target.split(',');
@@ -876,7 +878,12 @@ let commands = {
 			}
 		}
 		let hasPerms = false;
-		if (database.scribeShop) {
+
+		if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
+			hasPerms = true;
+		}
+
+		if (!hasPerms && database.scribeShop) {
 			for (let i = 0; i < database.scribeShop.length; i++) {
 				if (database.scribeShop[i].account === user.id) {
 					if (database.scribeShop[i].wotd !== 0) {
@@ -887,9 +894,7 @@ let commands = {
 				}
 			}
 		}
-		if (!(room instanceof Users.User) && user.hasRank(room, '+')) {
-			hasPerms = true;
-		}
+
 		if (!hasPerms) return this.say(text + 'You must be at least Voice or higher to set the History of the Day.');
 		let [title, date, location, ...rest] = target.split(',');
 
